@@ -38,7 +38,7 @@ public class AWSS3Service implements IAWSS3Service {
 
     @Override
     public CopyObjectResult copyObject(String sourceBucketName, String sourceObjKey, String destinationBucketName, String destinationObjKey) {
-        return this.copyObject(sourceBucketName, sourceObjKey, destinationBucketName, destinationObjKey);
+        return this.s3Client.copyObject(sourceBucketName, sourceObjKey, destinationBucketName, destinationObjKey);
     }
 
     @Override

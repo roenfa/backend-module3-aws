@@ -52,8 +52,8 @@ public class S3Application {
         System.out.println("Last Modified Date" + metadata.getLastModified());
 
         //copying from s3 bucket 1 to s3 bucket 2
-        /* this.awsS3Service.copyObject(sourceBucketName, "Documents/files/"+fileName,
-        destinationBucketName, "Documents/files/"+fileName); */
+        this.awsS3Service.copyObject(sourceBucketName, "Documents/files/"+fileName1,
+        destinationBucketName, "Documents/files/"+fileName2);
 
         //delete objects
         ArrayList<KeyVersion> keys = new ArrayList<KeyVersion>();
