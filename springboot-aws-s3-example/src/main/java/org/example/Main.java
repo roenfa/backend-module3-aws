@@ -23,6 +23,6 @@ public class Main {
         AWSS3Service awss3Service = new AWSS3Service(s3Client);
 
         S3Application app = new S3Application(awss3Service);
-        app.run();
+        app.deleteMultipleObjects();
     }
 }
