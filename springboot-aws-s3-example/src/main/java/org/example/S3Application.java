@@ -1,6 +1,7 @@
 package org.example;
 
 import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
+import com.amazonaws.services.s3.model.S3Object;
 import org.example.services.IAWSS3Service;
 
 import java.io.File;
@@ -57,6 +58,11 @@ public class S3Application {
                     "smm-springboot2", "Documents/copied/new.txt");
     }
 
+    public void getObject(){
+        S3Object data = this.awsS3Service.getObject("smm-springboot","Documents/files/smm-file.txt");
+        System.out.println("bucket: "+ data.getBucketName());
+        System.out.println("key: "+ data.getKey());
+    }
     public void deleteSingleObject(){
         this.awsS3Service.deleteObject("smm-springboot","Documents/files/example.txt");
     }

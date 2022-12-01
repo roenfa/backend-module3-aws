@@ -1,11 +1,8 @@
 package org.example.services;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
-import com.amazonaws.services.s3.model.PutObjectResult;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +32,11 @@ public class AWSS3Service implements IAWSS3Service {
     @Override
     public CopyObjectResult copyObject(String sourceBucketName, String sourceObjKey, String destinationBucketName, String destinationObjKey) {
         return this.s3Client.copyObject(sourceBucketName, sourceObjKey, destinationBucketName, destinationObjKey);
+    }
+
+    @Override
+    public S3Object getObject(String bucketName, String key){
+        return this.s3Client.getObject(bucketName,key);
     }
 
     @Override
