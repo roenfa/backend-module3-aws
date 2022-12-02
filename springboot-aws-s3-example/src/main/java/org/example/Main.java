@@ -10,8 +10,6 @@ import org.example.services.AWSS3Service;
 public class Main {
 
     public static void main(String[] args) {
-//        System.out.println("Hello world!");
-
         AWSCredentialsProvider baseCredentials = new ProfileCredentialsProvider("default");
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
