@@ -71,8 +71,8 @@ public class S3Application {
             System.exit(1);
         }
         //copying from s3 bucket 1 to s3 bucket 2
-        // this.awsS3Service.copyObject("bootcamp-backend-bucket", "picture/pic.png",
-        //         "bootcamp-backend-bucket2", "Documents/picture.png");
+        this.awsS3Service.copyObject("bootcamp-backend-bucket", "picture/pic.png",
+                "bootcamp-backend-bucket2", "Documents/picture.png");
         //delete objects
         this.awsS3Service.deleteObjects(bucketName, objectKey1, objectKey2);
     }
