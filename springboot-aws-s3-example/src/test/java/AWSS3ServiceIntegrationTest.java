@@ -78,14 +78,14 @@ public class AWSS3ServiceIntegrationTest {
     }
 
     @Test
-    public void whenDeleteObjectFromS3Bucket_thenCorrect() {
+    public void whenDeleteObjectt_thenCorrect() {
         doNothing().when(this.service).deleteObject(BUCKET_NAME, KEY);
         this.service.deleteObject(BUCKET_NAME, KEY);
         verify(this.service).deleteObject(BUCKET_NAME,KEY);
     }
 
     @Test
-    public void whenDeleteObjectsFromS3Bucket_thenCorrect() {
+    public void whenDeleteObjects_thenCorrect() {
         ArrayList<KeyVersion> deleteObjects = new ArrayList<>();
         doNothing().when(this.service).deleteObjects(BUCKET_NAME, deleteObjects);
         this.service.deleteObjects(BUCKET_NAME, deleteObjects);
