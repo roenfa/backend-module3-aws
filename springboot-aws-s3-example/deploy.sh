@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eo pipefail
-ARTIFACT_BUCKET='rencinas-bucket2'
+ARTIFACT_BUCKET='smm-springboot'
 TEMPLATE=template.yml
 AWS_PROFILE=$1
 
