@@ -20,8 +20,10 @@ public class HandlerWeatherData implements RequestHandler<WeatherData, String> {
 
         logger.log("INPUT: " + input.getPressureHPa() +" "+ input.getTemperature() + " "+input.getWindKmh() + " "+input.getHumidityPoint());
         if(input.getTemperature() == null){
+            logger.log("Invalid input missing temperature");
             throw new MissingFormatArgumentException("Temperature is required");
         } else if (input.getPressureHPa() == null) {
+            logger.log("Invalid input missing pressure Hpa");
             throw new MissingFormatArgumentException("PressureHpa is required");
         } else {
             response = gson.toJson(input);
