@@ -23,7 +23,10 @@ public class WeatherData {
     }
 
     public Integer getPressureHPa(){
-        return this.windKmh;
+        return this.pressureHPa;
+    }
+    public void setPressureHPa(Integer p){
+        this.pressureHPa = p;
     }
 
 }

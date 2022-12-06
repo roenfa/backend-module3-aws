@@ -5,7 +5,7 @@ Resources:
   function:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://smm-springboot/494935524d83a580a8f18bb1f202fd4a
+      CodeUri: s3://smm-springboot/c24f7fafa0878e4e1831efe2ee7394c1
       Handler: org.example.handlers.HandlerWeatherData
       FunctionName: basic-lambda-smm-2
       Runtime: java11

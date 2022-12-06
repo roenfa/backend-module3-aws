@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.example.models.WeatherData;
 
+import java.util.MissingFormatArgumentException;
+
 public class HandlerWeatherData implements RequestHandler<WeatherData, String> {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -16,11 +18,11 @@ public class HandlerWeatherData implements RequestHandler<WeatherData, String> {
 
         LambdaLogger logger = context.getLogger();
 
-        logger.log("INPUT " + input);
+        logger.log("INPUT: " + input.getPressureHPa() +" "+ input.getTemperature() + " "+input.getWindKmh() + " "+input.getHumidityPoint());
         if(input.getTemperature() == null){
-            return "Temperature is required";
+            throw new MissingFormatArgumentException("Temperature is required");
         } else if (input.getPressureHPa() == null) {
-            return "PressureHPa is required";
+            throw new MissingFormatArgumentException("PressureHpa is required");
         } else {
             response = gson.toJson(input);
             return response;
