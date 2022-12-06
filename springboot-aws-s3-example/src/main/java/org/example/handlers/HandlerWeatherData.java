@@ -18,6 +18,12 @@ public class HandlerWeatherData implements RequestHandler<WeatherData, String> {
 
         logger.log("INPUT " + input);
 
+        //Weather data have temperature and pressureHPa required else throw exception
+        if (!(input.getTemperature() != null && input.getPressureHPa() != null)) {
+            logger.log("ERROR: Temperature and pressureHPa are required");
+            throw new RuntimeException("Temperature and pressureHPa are required");
+        }
+
         response = gson.toJson(input);
 
         return response;
