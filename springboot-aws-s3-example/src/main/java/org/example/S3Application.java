@@ -1,11 +1,12 @@
 package org.example;
 
-import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import org.example.models.WeatherData;
 import org.example.services.IAWSS3Service;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class S3Application {
     private IAWSS3Service awsS3Service;
@@ -16,8 +17,12 @@ public class S3Application {
     }
 
     public void run() {
+
         if (this.awsS3Service.isBucketExist(bucketName)) {
             System.out.println("Bucket name exists!!!");
+
+            WeatherData weatherData = new WeatherData();
+
         } else {
 //            this.awsS3Service.createBucket(bucketName);
 

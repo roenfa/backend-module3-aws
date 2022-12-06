@@ -1,10 +1,18 @@
 package org.example.models;
 
+import javax.validation.constraints.NotNull;
+
 public class WeatherData {
-    private Integer temperature;//required
+
+    @NotNull(message = "temperature must not be null")
+
+    private Integer temperature; //required
+
     private Double humidityPoint;
     private Integer windKmh;
-    private Integer pressureHPa;//required
+
+    @NotNull(message = "pressure can not be null")
+    private Integer pressureHPa; //required
 
     public Integer getTemperature(){
         return this.temperature;
