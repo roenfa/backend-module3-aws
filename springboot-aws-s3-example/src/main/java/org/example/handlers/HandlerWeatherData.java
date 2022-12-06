@@ -17,9 +17,13 @@ public class HandlerWeatherData implements RequestHandler<WeatherData, String> {
         LambdaLogger logger = context.getLogger();
 
         logger.log("INPUT " + input);
-
-        response = gson.toJson(input);
-
-        return response;
+        if(input.getTemperature() == null){
+            return "Temperature is required";
+        } else if (input.getPressureHPa() == null) {
+            return "PressureHPa is required";
+        } else {
+            response = gson.toJson(input);
+            return response;
+        }
     }
 }
