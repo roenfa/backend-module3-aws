@@ -12,16 +12,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.io.File;
 
+@ExtendWith(MockitoExtension.class)
 public class AWSS3ServiceIntegrationTest {
     private static final String BUCKET_NAME = "test-bucket";
-    
     
     @Mock
     private AmazonS3 s3Client;
@@ -32,7 +36,7 @@ public class AWSS3ServiceIntegrationTest {
     public void setUp() {
         s3Client = mock(AmazonS3.class);
         service = new AWSS3Service(s3Client);
-        // MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(service);
     }
 
     @Test
@@ -54,8 +58,7 @@ public class AWSS3ServiceIntegrationTest {
         Bucket bucket = new Bucket(BUCKET_NAME);
         // when(this.s3Client.createBucket(anyString())).thenReturn(bucket);
         when(this.service.createBucket(anyString()))
-            
-        .thenReturn(bucket);
+            .thenReturn(bucket);
 
         assertThat(bucket);
     }
@@ -76,8 +79,6 @@ public class AWSS3ServiceIntegrationTest {
         when(this.service.uploadObject(any(), any(), any()))
             .thenReturn(putObjectResult);
 
-        /* S3Object object = new S3Object();
-        object.setObjectMetadata(metadata); */
         verify(service).uploadObject(BUCKET_NAME, OBJECT_KEY, NEW_FILE);
         PutObjectRequest expectedRequest = new PutObjectRequest(BUCKET_NAME, OBJECT_KEY, NEW_FILE);
 
@@ -112,5 +113,12 @@ public class AWSS3ServiceIntegrationTest {
             DESTINATION_BUCKET_NAME, DESTINATION_OBJECT_KEY);
 
         verify(s3Client).copyObject(expectedRequest);
+    }
+
+    @Test
+    public void whenBucketAndKey_thenDeleteObject(){
+        doNothing().when(service).deleteObject(any(), any());
+
+        verify(this.service).deleteObject(BUCKET_NAME, OBJECT_KEY);
     }
 }
