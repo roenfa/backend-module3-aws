@@ -6,6 +6,23 @@ public class WeatherData {
     private Integer windKmh;
     private Integer pressureHPa;//required
 
+
+    public WeatherData(Integer temperature, Double humidityPoint, Integer windKmh, Integer pressureHPa) {
+        this.temperature = temperature;
+        this.humidityPoint = humidityPoint;
+        this.windKmh = windKmh;
+        this.pressureHPa = pressureHPa;
+    }
+
+    
+
+    public WeatherData(Double humidityPoint, Integer windKmh) {
+        this.humidityPoint = humidityPoint;
+        this.windKmh = windKmh;
+    }
+
+
+
     public Integer getTemperature(){
         return this.temperature;
     }

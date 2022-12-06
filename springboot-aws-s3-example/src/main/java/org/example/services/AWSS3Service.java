@@ -47,13 +47,6 @@ public class AWSS3Service implements IAWSS3Service {
         return this.s3Client.getObject(bucketName, objectKey);
     }
 
-    // @Override
-    // public void deleteObjects(String bucketName, List<String> objectsKeys) {
-    //     for (String objKey: objectsKeys) {
-    //         this.deleteObject(bucketName, objKey);
-    //     }
-    //     // objectsKeys.stream().map(objKey -> {this.deleteObject(bucketName, objKey) return objKey});
-    // }
     @Override
     public void deleteObjects(String bucketName, String... objectsKeys) {
         try {
