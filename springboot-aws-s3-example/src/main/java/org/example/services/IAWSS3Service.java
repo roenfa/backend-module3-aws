@@ -1,11 +1,9 @@
 package org.example.services;
 
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public interface IAWSS3Service {
 
@@ -18,6 +16,9 @@ public interface IAWSS3Service {
     CopyObjectResult copyObject(String sourceBucketName, String sourceObjKey, String destinationBucketName, String destinationObjKey);
     void deleteObject(String bucketName, String objectKey);
 
+    void deleteObjects(String bucketName, ArrayList<String> objectKey);
+
+    ArrayList<String> getObjects(String bucketName);
 
     void deleteBucket(String bucketName);
 

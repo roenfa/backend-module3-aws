@@ -3,6 +3,7 @@ package org.example;
 import org.example.services.IAWSS3Service;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class S3Application {
     private IAWSS3Service awsS3Service;
@@ -20,13 +21,16 @@ public class S3Application {
         if (this.awsS3Service.isBucketExist(bucketName)) {
             System.out.println("Bucket name exists!!!");
 
-            //get object
-            System.out.println("Getting object...");
-            this.awsS3Service.getObject(bucketName, bucketFileName);
 
-            //delete object
-            this.awsS3Service.deleteObject(bucketName, "Documents/files/bootcamp_andresgb.txt");
+            ArrayList<String> files = this.awsS3Service.getObjects(bucketName);
+            System.out.println("Files in bucket: " + files);
 
+            //si bucket name está en el array de files, entonces no se crea
+            if (!files.contains(bucketFileName)) {
+                System.out.println("File already exists");
+            } else {
+                System.out.println("File does not exist");
+            }
             //delete bucket
             this.awsS3Service.deleteBucket(bucketName);
 
