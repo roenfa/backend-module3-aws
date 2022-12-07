@@ -78,7 +78,7 @@ public class AWSS3ServiceIntegrationTest {
     }
 
     @Test
-    public void whenDeleteObjectt_thenCorrect() {
+    public void whenDeleteObject_thenCorrect() {
         doNothing().when(this.service).deleteObject(BUCKET_NAME, KEY);
         this.service.deleteObject(BUCKET_NAME, KEY);
         verify(this.service).deleteObject(BUCKET_NAME,KEY);
