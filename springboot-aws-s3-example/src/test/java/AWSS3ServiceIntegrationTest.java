@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 public class AWSS3ServiceIntegrationTest {
     private final String BUCKET_NAME = "bootcamp-backend-jesus";
     private final String FILE_KEY = "test/bootcamp.txt";
+
     private AmazonS3 s3;
     private AWSS3Service service;
 
@@ -122,5 +123,15 @@ public class AWSS3ServiceIntegrationTest {
 
         doNothing().when(this.service).deleteObjects(BUCKET_NAME, deleteObjects);
         verify(this.service).deleteObjects(BUCKET_NAME, deleteObjects);
+    }
+
+    @Test
+    public void whenVerifyingUploadObject_thenCorrect() {
+        File file = mock(File.class);
+        PutObjectResult result = mock(PutObjectResult.class);
+        when(s3.putObject(anyString(), anyString(), (File) any())).thenReturn(result);
+
+        assertThat(service.uploadObject(BUCKET_NAME, FILE_KEY, file)).isEqualTo(result);
+        verify(s3).putObject(BUCKET_NAME,FILE_KEY, file);
     }
 }
