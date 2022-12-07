@@ -1,11 +1,11 @@
 package org.example.services;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class AWSS3Service implements IAWSS3Service {
     private final AmazonS3 s3Client;
@@ -31,11 +31,24 @@ public class AWSS3Service implements IAWSS3Service {
 
     @Override
     public CopyObjectResult copyObject(String sourceBucketName, String sourceObjKey, String destinationBucketName, String destinationObjKey) {
-        return this.copyObject(sourceBucketName, sourceObjKey, destinationBucketName, destinationObjKey);
+        return this.s3Client.copyObject(sourceBucketName, sourceObjKey, destinationBucketName, destinationObjKey);
+    }
+
+    @Override
+    public S3Object getObject(String bucketName, String key){
+        return this.s3Client.getObject(bucketName,key);
     }
 
     @Override
     public void deleteObject(String bucketName, String objectKey) {
         this.s3Client.deleteObject(bucketName, objectKey);
+    }
+
+    @Override
+    public void deleteObjects(String bucketName, ArrayList<KeyVersion> keys) {
+        DeleteObjectsRequest multiObjectDeleteRequest = new DeleteObjectsRequest(bucketName)
+                .withKeys(keys)
+                .withQuiet(false);;
+        this.s3Client.deleteObjects(multiObjectDeleteRequest);
     }
 }
