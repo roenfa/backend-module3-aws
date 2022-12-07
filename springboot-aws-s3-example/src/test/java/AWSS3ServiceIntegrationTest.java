@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 
+import java.io.File;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
