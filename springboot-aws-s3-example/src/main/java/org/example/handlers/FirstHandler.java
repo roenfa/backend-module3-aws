@@ -10,15 +10,9 @@ import software.amazon.awssdk.services.lambda.model.InvocationType;
 import software.amazon.awssdk.services.lambda.model.InvokeRequest;
 import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 
-import java.nio.charset.StandardCharsets;
-
 public class FirstHandler implements RequestHandler<Object, Object> {
     private static final String SECOND_FUNCTION_NAME = "RESecondFunction";
-    private final LambdaClient lambdaClient;
-
-    public FirstHandler() {
-        lambdaClient = DependencyFactory.lambdaClient();
-    }
+    private final LambdaClient lambdaClient = DependencyFactory.lambdaClient();
 
     @Override
     public Object handleRequest(Object input, Context context) {
@@ -43,6 +37,4 @@ public class FirstHandler implements RequestHandler<Object, Object> {
 
         return input;
     }
-
-
 }

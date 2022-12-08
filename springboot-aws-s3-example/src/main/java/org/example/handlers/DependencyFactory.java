@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.lambda.LambdaClient;
 public class DependencyFactory {
     public static LambdaClient lambdaClient() {
         // TODO add a default credential provider to invoke lambda
-        AwsCredentials cred = AwsBasicCredentials.create("<YOUR_ACCESS_KEY>", "<YOUR_SECRET_KEY>");
+        AwsCredentials cred = AwsBasicCredentials.create("AKIARECXQVRMBMM2NNZT", "lXeg+3DqizdcbqCNrJvTIVAJGcQhqm4L/MyMx7Ta");
 
         AwsCredentialsProvider credProvider = StaticCredentialsProvider.create(cred);
 
