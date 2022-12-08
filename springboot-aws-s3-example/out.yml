@@ -5,9 +5,9 @@ Resources:
   function:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://smm-springboot/c24f7fafa0878e4e1831efe2ee7394c1
-      Handler: org.example.handlers.HandlerWeatherData
-      FunctionName: basic-lambda-smm-2
+      CodeUri: s3://smm-springboot/3b8c0678db9d505b84e4f060ad9a28f8
+      Handler: org.example.handlers.FirstHandler
+      FunctionName: SMM-FirstFunction
       Runtime: java11
       Description: Java function
       MemorySize: 512
@@ -17,4 +17,6 @@ Resources:
       - AWSLambda_ReadOnlyAccess
       - AWSXrayWriteOnlyAccess
       - AWSLambdaVPCAccessExecutionRole
+      - LambdaInvokePolicy:
+          FunctionName: SMM-SecondFunction
       Tracing: Active

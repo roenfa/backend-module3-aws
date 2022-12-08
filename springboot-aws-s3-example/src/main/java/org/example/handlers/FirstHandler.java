@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 import java.nio.charset.StandardCharsets;
 
 public class FirstHandler implements RequestHandler<Object, Object> {
-    private static final String SECOND_FUNCTION_NAME = "RESecondFunction";
+    private static final String SECOND_FUNCTION_NAME = "SMM-SecondFunction";
     private final LambdaClient lambdaClient;
 
     public FirstHandler() {
@@ -27,8 +27,11 @@ public class FirstHandler implements RequestHandler<Object, Object> {
         payloadData.setTemperature(8);
 
         //This will convert object to JSON String
+
         String inputJSON = new Gson().toJson(payloadData);
+        System.out.println(inputJSON);
         SdkBytes payload = SdkBytes.fromUtf8String(inputJSON);
+        System.out.println(payload);
 
         InvokeRequest invokeRequest = InvokeRequest.builder()
                 .functionName(SECOND_FUNCTION_NAME)
@@ -39,7 +42,11 @@ public class FirstHandler implements RequestHandler<Object, Object> {
         InvokeResponse response = lambdaClient.invoke(invokeRequest);
 
         System.out.println("Response: " + response.toString());
-        System.out.println("Payload: " + response.payload().asUtf8String());
+        System.out.println("Response status: " + response.statusCode());
+        System.out.println("Response sdkHttpResponse: " + response.sdkHttpResponse().toString());
+        System.out.println("Payload original: " + response.payload().asUtf8String());
+        System.out.println("Payload original: " + response.payload().asUtf8String().toString());
+        System.out.println("Payload with get bytes and to string: " + response.payload().asUtf8String().getBytes(StandardCharsets.UTF_8).toString());
 
         return input;
     }
