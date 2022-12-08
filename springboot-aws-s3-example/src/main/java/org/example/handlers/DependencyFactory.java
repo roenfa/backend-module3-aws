@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.lambda.LambdaClient;
 public class DependencyFactory {
     public static LambdaClient lambdaClient() {
         return LambdaClient.builder()
-                .credentialsProvider(ProfileCredentialsProvider.create())
+                .credentialsProvider(ProfileCredentialsProvider.create("default"))
                 .region(Region.US_EAST_1)
                 .httpClientBuilder(UrlConnectionHttpClient.builder())
                 .build();
