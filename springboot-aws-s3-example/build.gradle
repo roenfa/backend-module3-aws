@@ -27,8 +27,10 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.10'
 
-    // https://mvnrepository.com/artifact/software.amazon.awssdk/sfn
-    implementation 'software.amazon.awssdk:sfn:2.18.28'
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/lambda
+    implementation 'software.amazon.awssdk:lambda:2.18.28'
+
+    implementation 'software.amazon.awssdk:url-connection-client:2.18.31'
 
     // https://mvnrepository.com/artifact/software.amazon.jsii/jsii-runtime
     implementation 'software.amazon.jsii:jsii-runtime:1.71.0'

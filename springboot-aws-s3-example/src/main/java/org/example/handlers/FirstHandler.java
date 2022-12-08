@@ -27,7 +27,6 @@ public class FirstHandler implements RequestHandler<Object, Object> {
         String payloadString = gson.toJson(payloadClass);
         var payload = SdkBytes.fromUtf8String(payloadString);
 
-
         InvokeRequest invokeRequest = InvokeRequest.builder()
                 .functionName(SECOND_FUNCTION_NAME)
                 .invocationType(InvocationType.EVENT)
