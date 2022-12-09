@@ -33,6 +33,10 @@ dependencies {
     implementation group: 'org.glassfish', name: 'javax.el', version: '3.0.0'
     // https://mvnrepository.com/artifact/software.amazon.awssdk/sfn
     implementation 'software.amazon.awssdk:sfn:2.18.28'
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/lambda
+    implementation 'software.amazon.awssdk:lambda:2.18.28'
+
+    implementation 'software.amazon.awssdk:url-connection-client:2.18.31'
 
     implementation 'junit:junit:4.13.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

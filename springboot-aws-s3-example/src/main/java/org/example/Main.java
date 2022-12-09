@@ -5,12 +5,18 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import org.example.handlers.DependencyFactory;
+import org.example.handlers.SecondHandler;
+import org.example.models.WeatherData;
 import org.example.services.AWSS3Service;
+import software.amazon.awssdk.services.lambda.LambdaClient;
+import software.amazon.awssdk.services.lambda.model.InvokeRequest;
 
 public class Main {
 
     public static void main(String[] args) {
         AWSCredentialsProvider baseCredentials = new ProfileCredentialsProvider("default");
+
 
         AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()

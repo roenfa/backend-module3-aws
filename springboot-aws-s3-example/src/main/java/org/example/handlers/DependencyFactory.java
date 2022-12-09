@@ -1,17 +1,17 @@
 package org.example.handlers;
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
+import software.amazon.awssdk.auth.credentials.*;
+import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.lambda.LambdaClient;
 
-import java.net.URLConnection;
 
 public class DependencyFactory {
     public static LambdaClient lambdaClient() {
+
         return LambdaClient.builder()
-                .credentialsProvider(new ProfileCredentialsProvider("default"))
-                .region(Regions.US_EAST_1)
-                .httpClientBuilder(URLConnectionHttpClient.builder)
+                .region(Region.US_EAST_1)
+                .httpClient(UrlConnectionHttpClient.builder().build())
                 .build();
     }
 }

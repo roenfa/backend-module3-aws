@@ -6,16 +6,19 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: build/distributions/springboot-aws-s3-example-1.0-SNAPSHOT.zip
-      Handler: org.example.handlers.HandlerWeatherData
-      FunctionName: basic-lambda-ref-2
+      Handler: org.example.handlers.FirstHandler
+      FunctionName: jvallecilla-first-function
       Runtime: java11
       Description: Java function
       MemorySize: 512
       Timeout: 10
+
       # Function's execution role
       Policies:
         - AWSLambdaBasicExecutionRole
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
         - AWSLambdaVPCAccessExecutionRole
+        - LambdaInvokePolicy:
+            FunctionName: jvallecilla-second-function
       Tracing: Active
