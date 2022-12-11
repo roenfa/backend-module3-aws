@@ -1,4 +1,4 @@
-package org.example.handlers;
+        package org.example.handlers;
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -15,6 +15,10 @@ public class DependencyFactory {
 //        // TODO add a default credential provider to invoke lambda
 //        AwsCredentials cred = AwsBasicCredentials.create("", "");
 //        AwsCredentialsProvider credProvider = StaticCredentialsProvider.create(cred);
+        // TODO add a default credential provider to invoke lambda
+        AwsCredentials cred = AwsBasicCredentials.create("access_key", "secret_key");
+
+        AwsCredentialsProvider credProvider = StaticCredentialsProvider.create(cred);
 
         return LambdaClient.builder()
                 //.credentialsProvider(credProvider)
