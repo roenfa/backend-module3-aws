@@ -15,6 +15,7 @@ import static org.mockito.Mockito.*;
 
 public class AWSS3ServiceIntegrationTest {
     private final String BUCKET_NAME = "bucket_name";
+    private final String KEY_NAME = "bucket_key";
     private AmazonS3 s3;
     private AWSS3Service service;
 
@@ -76,6 +77,15 @@ public class AWSS3ServiceIntegrationTest {
     public void deleteBucket() {
         this.service.deleteBucket(BUCKET_NAME);
         verify(s3).deleteBucket(BUCKET_NAME);
+    }
+
+    public void whenVerifyingUploadObject_thenCorrect() {
+        File file = mock(File.class);
+        PutObjectResult result = mock(PutObjectResult.class);
+        when(s3.putObject(anyString(), anyString(), (File) any())).thenReturn(result);
+
+        assertThat(service.uploadObject(BUCKET_NAME, KEY_NAME, file)).isEqualTo(result);
+        verify(s3).putObject(BUCKET_NAME, KEY_NAME, file);
     }
 
 }
