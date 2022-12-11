@@ -1,8 +1,15 @@
 ################################################################################
 # Bucket Variables
 ################################################################################
-bucket_name    = "dj-athena-s3"
-bucket_folders = ["output/", "input/", "results/"]
+bucket_name         = "dj-athena-s3"
+bucket_folders      = ["output/", "input/", "results/"]
+bucket_input_source = "files_s3/input/"
+
+################################################################################
+# Athena Variables
+################################################################################
+athena_database_name = "devopsdjaureguiathenadb"
+athena_glue_catalog  = "aws_data_catalog_djauregui"
 
 ################################################################################
 # Tagging System

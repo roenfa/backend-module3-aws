@@ -15,7 +15,7 @@ module "s3_bucket" {
   # This configuration combines some "default" tags with optionally provided additional tags
   tags = merge(
     var.additional_tags,
-		var.project_tags
+    var.project_tags
   )
 }
 # Folder structure creation
@@ -30,6 +30,26 @@ resource "aws_s3_object" "folder_structure" {
   # This configuration combines some "default" tags with optionally provided additional tags
   tags = merge(
     var.additional_tags,
-		var.project_tags
+    var.project_tags
   )
+}
+
+# Upload Files
+resource "aws_s3_object" "input_files" {
+  for_each = fileset(var.bucket_input_source, "*")
+  bucket   = module.s3_bucket.s3_bucket_id
+  key      = join("", ["input/",each.value])
+  source   = format("%s%s", var.bucket_input_source, each.value)
+  etag     = filemd5(format("%s%s", var.bucket_input_source, each.value))
+
+	# This configuration combines some "default" tags with optionally provided additional tags
+  tags = merge(
+    var.additional_tags,
+    var.project_tags
+  )
+
+  depends_on = [
+    module.s3_bucket
+  ]
+
 }

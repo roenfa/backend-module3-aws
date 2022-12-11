@@ -11,9 +11,19 @@ variable "bucket_folders" {
   description = "List of folder structure"
 }
 
+variable "bucket_input_source" {
+  type        = string
+  description = "Source of input file"
+}
+
 ################################################################################
 # Athena Variables
 ################################################################################
+variable "athena_glue_catalog" {
+  type        = string
+  description = "Name of athena catalog"
+}
+
 variable "athena_database_name" {
   type        = string
   description = "Name of athena database"
