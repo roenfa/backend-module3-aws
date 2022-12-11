@@ -43,6 +43,4 @@ public class FirstHandler implements RequestHandler<Object, Object> {
 
         return input;
     }
-
-
 }
