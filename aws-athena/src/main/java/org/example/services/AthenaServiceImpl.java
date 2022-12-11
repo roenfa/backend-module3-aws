@@ -8,8 +8,7 @@ import software.amazon.awssdk.services.athena.AthenaClient;
 import java.util.List;
 
 @Service
-public class AthenaServiceImpl<T> implements IAthenaService
-{
+public class AthenaServiceImpl<T> implements IAthenaService {
     @Autowired
     AthenaClient athenaClient;
 

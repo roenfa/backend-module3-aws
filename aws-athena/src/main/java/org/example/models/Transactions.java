@@ -1,29 +1,29 @@
 package org.example.models;
 
 public class Transactions {
-    private String transactionId;
+    private String id;
     private String type;
     private double amount;
     private String date;
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getId() {
+        return this.id;
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public double getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public String getDate() {
-        return date;
+        return this.date;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setId(String transactionId) {
+        this.id = transactionId;
     }
 
     public void setType(String type) {

@@ -21,11 +21,7 @@ import static org.example.helpers.Helpers.holdColumnInfo;
 
 
 public class AthenaQueryExecutor<T> {
-    private static Logger logger;
-
-    public AthenaQueryExecutor() {
-        logger = LoggerFactory.getLogger(AthenaQueryExecutor.class);
-    }
+    private static final Logger logger = LoggerFactory.getLogger(AthenaQueryExecutor.class);
 
     public static String submitAthenaQuery(AthenaClient athenaClient, String query) {
 
@@ -74,72 +70,30 @@ public class AthenaQueryExecutor<T> {
 
     // Process the result of each row
 
-    public static <T> List<T> processResultRows(
-            AthenaClient athenaClient, String queryExecutionId, Class<T> pojoClass) {
-        List<T> res = new ArrayList<>();
-        try {
-            GetQueryResultsRequest getQueryResultsRequest =
-                    GetQueryResultsRequest.builder()
-                            .queryExecutionId(queryExecutionId).build();
-
-            GetQueryResultsIterable getQueryResultsResults =
-                    athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
-
-            for (GetQueryResultsResponse result : getQueryResultsResults) {
-                List<Row> results = result.resultSet().rows();
-                res = processRows(results, pojoClass);
-            }
-        } catch (AthenaException e) {
-            logger.error("Failed to process with reason: {}", e.getMessage());
+    public static void processResultRows(AthenaClient athenaClient, String queryExecutionId) {
+        GetQueryResultsRequest getQueryResultsRequest = GetQueryResultsRequest.builder()
+                .queryExecutionId(queryExecutionId).build();
+        GetQueryResultsIterable getQueryResultsResults = athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
+        for (GetQueryResultsResponse Resultresult : getQueryResultsResults) {
+            List<ColumnInfo> columnInfoList = Resultresult.resultSet().resultSetMetadata().columnInfo();
+            int resultSize = Resultresult.resultSet().rows().size();
+            logger.info("Result size: " + resultSize);
+            List<Row> results = Resultresult.resultSet().rows();
+            processRow(results, columnInfoList);
         }
-        return res;
     }
-
-    @SneakyThrows
-    private static <T> List<T> processRows(List<Row> row, Class<T> pojoClass) {
-        List<T> res = new ArrayList<>();
-
-        PropertyDescriptor[] targetPds = BeanUtils.getPropertyDescriptors(pojoClass);
-        ArrayList<String> columnInfo = new ArrayList<>();
-        for (int i = 0; i < row.size(); i++) {
-            if( i == 0 ){
-                columnInfo = holdColumnInfo(row.get(i).data());
-                continue;
-            }
-            List<Datum> allData = row.get(i).data();
-
-            try {
-                T obj = createGenericInstance(
-                        pojoClass.getDeclaredConstructor().newInstance(),
-                        pojoClass);
-
-                for(int j = 0; j < allData.size(); j++){
-                    Datum data = allData.get(j);
-                    for (PropertyDescriptor targetPd : targetPds) {
-                        Method writeMethod = targetPd.getWriteMethod();
-                        String fieldName = targetPd.getName();
-
-                        if(fieldName != null  &&
-                                fieldName.equalsIgnoreCase(columnInfo.get(j))){
-                            writeMethod.invoke(obj, data.varCharValue());
-                            break;
-                        }
-                    }
-                }
-
-                res.add(obj);
-
-            } catch (InstantiationException x) {
-                x.printStackTrace();
-            } catch (IllegalAccessException x) {
-                x.printStackTrace();
-            } catch (NoSuchMethodException x) {
-                x.printStackTrace();
-            } catch (InvocationTargetException x) {
-                x.printStackTrace();
-            }
-
+    private static void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
+        List<String> columns = new ArrayList<>();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            columns.add(columnInfo.name());
         }
-        return res;
+        for (Row row: rowList) {
+            int index = 0;
+            for (Datum datum : row.data()) {
+                logger.info(columns.get(index) + ": " + datum.varCharValue());
+                index++;
+            }
+            logger.info("===================================");
+        }
     }
 }
