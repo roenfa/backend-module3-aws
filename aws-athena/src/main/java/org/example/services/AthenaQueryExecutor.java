@@ -1,24 +1,15 @@
 package org.example.services;
 
-import lombok.SneakyThrows;
 import org.example.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import software.amazon.awssdk.services.athena.model.*;
 import software.amazon.awssdk.services.athena.AthenaClient;
 import software.amazon.awssdk.services.athena.model.QueryExecutionContext;
 import software.amazon.awssdk.services.athena.paginators.GetQueryResultsIterable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.reflect.Method;
-import java.beans.PropertyDescriptor;
-
-import static org.example.helpers.Helpers.createGenericInstance;
-import static org.example.helpers.Helpers.holdColumnInfo;
-
 
 public class AthenaQueryExecutor<T> {
     private static final Logger logger = LoggerFactory.getLogger(AthenaQueryExecutor.class);
@@ -64,7 +55,7 @@ public class AthenaQueryExecutor<T> {
             } else {
                 Thread.sleep(Constants.SLEEP_AMOUNT_IN_MS);
             }
-            System.out.println("The current status is: " + queryState);
+            logger.info("The current status is: " + queryState);
         }
     }
 

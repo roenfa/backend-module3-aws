@@ -8,12 +8,10 @@ import java.util.List;
 public class AthenaOrchestrator<T>
 {
     private final String query;
-    private final Class<T> pojoClass;
     private final AthenaClient athenaClient;
 
-    public AthenaOrchestrator(AthenaClient athenaClient, String query, Class<T> pojoClass) {
+    public AthenaOrchestrator(AthenaClient athenaClient, String query) {
         this.query = query;
-        this.pojoClass = pojoClass;
         this.athenaClient = athenaClient;
     }
 

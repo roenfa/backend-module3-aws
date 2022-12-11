@@ -13,7 +13,7 @@ public class AthenaServiceImpl<T> implements IAthenaService {
     AthenaClient athenaClient;
 
     @Override
-    public List<Transactions> getDataFromAthena(String myQuery){
-        return new AthenaOrchestrator<>(athenaClient, myQuery, Transactions.class).execute();
+    public void getDataFromAthena(String myQuery){
+        new AthenaOrchestrator<>(this.athenaClient, myQuery).execute();
     }
 }
