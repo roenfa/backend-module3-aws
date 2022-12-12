@@ -5,9 +5,9 @@ Resources:
   function:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://rencinas-bucket2/c5949d35dae0b3c7780951b7a6283ae9
-      Handler: org.example.handlers.HandlerWeatherData
-      FunctionName: basic-lambda-ref-2
+      CodeUri: s3://rencinas-bucket2/152e910ffbe5d73088ef37a27ab47748
+      Handler: org.example.handlers.FirstHandler
+      FunctionName: REFirstFunction
       Runtime: java11
       Description: Java function
       MemorySize: 512
