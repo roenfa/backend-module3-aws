@@ -1,0 +1,1 @@
+terraform plan -var-file=envs/dev.tfvars -out=plan.out
