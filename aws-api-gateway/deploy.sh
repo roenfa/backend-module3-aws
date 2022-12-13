@@ -2,7 +2,7 @@
 set -eo pipefail
 ARTIFACT_BUCKET='re-api-gateway'
 TEMPLATE=stack.yml
-STACK_NAME='api-gateway-lambda'
+STACK_NAME='re-api-gateway-lambda'
 AWS_PROFILE=$1
 
 # Spring Boot 2 stack
