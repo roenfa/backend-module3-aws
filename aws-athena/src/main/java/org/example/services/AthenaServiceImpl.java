@@ -8,13 +8,12 @@ import software.amazon.awssdk.services.athena.AthenaClient;
 import java.util.List;
 
 @Service
-public class AthenaServiceImpl<T> implements IAthenaService
-{
+public class AthenaServiceImpl<T> implements IAthenaService {
     @Autowired
     AthenaClient athenaClient;
 
     @Override
-    public List<Transactions> getDataFromAthena(String myQuery){
-        return new AthenaOrchestrator<>(athenaClient, myQuery, Transactions.class).execute();
+    public void getDataFromAthena(String myQuery){
+        new AthenaOrchestrator<>(this.athenaClient, myQuery).execute();
     }
 }

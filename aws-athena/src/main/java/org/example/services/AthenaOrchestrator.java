@@ -8,12 +8,10 @@ import java.util.List;
 public class AthenaOrchestrator<T>
 {
     private final String query;
-    private final Class<T> pojoClass;
     private final AthenaClient athenaClient;
 
-    public AthenaOrchestrator(AthenaClient athenaClient, String query, Class<T> pojoClass) {
+    public AthenaOrchestrator(AthenaClient athenaClient, String query) {
         this.query = query;
-        this.pojoClass = pojoClass;
         this.athenaClient = athenaClient;
     }
 
@@ -23,10 +21,10 @@ public class AthenaOrchestrator<T>
                 AthenaQueryExecutor.submitAthenaQuery(athenaClient, this.query);
         try {
             AthenaQueryExecutor.waitForQueryToComplete(athenaClient, queryExecutionId);
-            return AthenaQueryExecutor.processResultRows(
-                    athenaClient, queryExecutionId, pojoClass);
+            AthenaQueryExecutor.processResultRows(
+                    athenaClient, queryExecutionId);
         } catch(InterruptedException e) {
-            System.out.println("Error");
+            System.out.println("Error: " + e.getMessage());
         }
 
         return null;

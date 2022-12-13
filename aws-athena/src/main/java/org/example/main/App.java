@@ -2,7 +2,6 @@ package org.example.main;
 
 import org.example.configurations.AthenaClientFactory;
 import org.example.constants.Constants;
-import org.example.models.Transactions;
 import org.example.services.AthenaOrchestrator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class App implements CommandLineRunner {
         AthenaClient athenaClient = factory.createClientDev();
         logger.info("Initializing Athena Orchestrator");
 
-        AthenaOrchestrator orchestrator = new AthenaOrchestrator<>(athenaClient, defaultQuery, Transactions.class);
+        AthenaOrchestrator orchestrator = new AthenaOrchestrator<>(athenaClient, defaultQuery);
         logger.info("Executing Athena Orchestrator");
         orchestrator.execute();
     }
