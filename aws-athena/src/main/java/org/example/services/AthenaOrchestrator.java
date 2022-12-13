@@ -1,28 +1,26 @@
 package org.example.services;
 
 import lombok.SneakyThrows;
-import software.amazon.awssdk.services.athena.AthenaClient;
 
 import java.util.List;
 
 public class AthenaOrchestrator<T>
 {
     private final String query;
-    private final AthenaClient athenaClient;
+    private AthenaService athenaService;
 
-    public AthenaOrchestrator(AthenaClient athenaClient, String query) {
+    public AthenaOrchestrator(String query, AthenaService athenaService) {
         this.query = query;
-        this.athenaClient = athenaClient;
+        this.athenaService = athenaService;
     }
 
     @SneakyThrows
     public List<T> execute() {
         String queryExecutionId =
-                AthenaQueryExecutor.submitAthenaQuery(athenaClient, this.query);
+                this.athenaService.submitQuery(this.query);
         try {
-            AthenaQueryExecutor.waitForQueryToComplete(athenaClient, queryExecutionId);
-            AthenaQueryExecutor.processResultRows(
-                    athenaClient, queryExecutionId);
+            this.athenaService.waitForQueryToComplete(queryExecutionId);
+            this.athenaService.processQueryResult(queryExecutionId);
         } catch(InterruptedException e) {
             System.out.println("Error: " + e.getMessage());
         }
