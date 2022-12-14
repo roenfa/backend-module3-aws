@@ -11,10 +11,15 @@ import software.amazon.awssdk.services.athena.paginators.GetQueryResultsIterable
 import java.util.ArrayList;
 import java.util.List;
 
-public class AthenaQueryExecutor<T> {
-    private static final Logger logger = LoggerFactory.getLogger(AthenaQueryExecutor.class);
+public class AthenaService<T> implements IAthenaService {
+    private static final Logger logger = LoggerFactory.getLogger(AthenaService.class);
+    private final AthenaClient athenaClient;
 
-    public static String submitAthenaQuery(AthenaClient athenaClient, String query) {
+    public AthenaService(AthenaClient athenaClient) {
+        this.athenaClient = athenaClient;
+    }
+
+    public String submitQuery(String query) {
 
         QueryExecutionContext queryExecutionContext = QueryExecutionContext.builder()
                 .database(Constants.ATHENA_DEFAULT_DATABASE).build();
@@ -27,14 +32,13 @@ public class AthenaQueryExecutor<T> {
                 .queryExecutionContext(queryExecutionContext)
                 .resultConfiguration(resultConfiguration).build();
 
-        StartQueryExecutionResponse startQueryExecutionResponse = athenaClient.startQueryExecution(startQueryExecutionRequest);
+        StartQueryExecutionResponse startQueryExecutionResponse = this.athenaClient.startQueryExecution(startQueryExecutionRequest);
 
         return startQueryExecutionResponse.queryExecutionId();
     }
 
     // Waits for an Amazon Athena query to complete, fail or to be cancelled.
-    public static void waitForQueryToComplete(
-            AthenaClient athenaClient, String queryExecutionId) throws InterruptedException {
+    public void waitForQueryToComplete(String queryExecutionId) throws InterruptedException {
         GetQueryExecutionRequest getQueryExecutionRequest = GetQueryExecutionRequest.builder()
                 .queryExecutionId(queryExecutionId).build();
 
@@ -42,7 +46,7 @@ public class AthenaQueryExecutor<T> {
         boolean isQueryStillRunning = true;
 
         while (isQueryStillRunning) {
-            getQueryExecutionResponse = athenaClient.getQueryExecution(getQueryExecutionRequest);
+            getQueryExecutionResponse = this.athenaClient.getQueryExecution(getQueryExecutionRequest);
             String queryState =
                     getQueryExecutionResponse.queryExecution().status().state().toString();
             if (queryState.equals(QueryExecutionState.FAILED.toString())) {
@@ -58,22 +62,19 @@ public class AthenaQueryExecutor<T> {
             logger.info("The current status is: " + queryState);
         }
     }
-
-    // Process the result of each row
-
-    public static void processResultRows(AthenaClient athenaClient, String queryExecutionId) {
+    public void processQueryResult(String queryExecutionId) {
         GetQueryResultsRequest getQueryResultsRequest = GetQueryResultsRequest.builder()
                 .queryExecutionId(queryExecutionId).build();
-        GetQueryResultsIterable getQueryResultsResults = athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
-        for (GetQueryResultsResponse Resultresult : getQueryResultsResults) {
-            List<ColumnInfo> columnInfoList = Resultresult.resultSet().resultSetMetadata().columnInfo();
-            int resultSize = Resultresult.resultSet().rows().size();
+        GetQueryResultsIterable getQueryResultsResults = this.athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
+        for (GetQueryResultsResponse resultResponse : getQueryResultsResults) {
+            List<ColumnInfo> columnInfoList = resultResponse.resultSet().resultSetMetadata().columnInfo();
+            int resultSize = resultResponse.resultSet().rows().size();
             logger.info("Result size: " + resultSize);
-            List<Row> results = Resultresult.resultSet().rows();
+            List<Row> results = resultResponse.resultSet().rows();
             processRow(results, columnInfoList);
         }
     }
-    private static void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
+    private void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
         List<String> columns = new ArrayList<>();
         for (ColumnInfo columnInfo : columnInfoList) {
             columns.add(columnInfo.name());
