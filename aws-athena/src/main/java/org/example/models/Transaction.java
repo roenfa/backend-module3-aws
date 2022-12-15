@@ -1,6 +1,6 @@
 package org.example.models;
 
-public class Transactions {
+public class Transaction {
     private String id;
     private String type;
     private double amount;
@@ -36,5 +36,10 @@ public class Transactions {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Id: " + this.id + " Type: " + this.type + " Amount: " + this.amount + " Date: " + this.date;
     }
 }

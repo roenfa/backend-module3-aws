@@ -27,7 +27,7 @@ public class App implements CommandLineRunner {
         AthenaService athenaQueryExecutor = new AthenaService(athenaClient);
         logger.info("Initializing Athena Orchestrator");
 
-        AthenaOrchestrator orchestrator = new AthenaOrchestrator<>(defaultQuery, athenaQueryExecutor);
+        AthenaOrchestrator orchestrator = new AthenaOrchestrator(defaultQuery, athenaQueryExecutor);
         logger.info("Executing Athena Orchestrator");
         orchestrator.execute();
     }
