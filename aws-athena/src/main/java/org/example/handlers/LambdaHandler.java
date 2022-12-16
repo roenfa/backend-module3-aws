@@ -50,7 +50,7 @@ public class LambdaHandler implements RequestStreamHandler {
             AthenaService athenaQueryExecutor = new AthenaService(athenaClient);
             logger.log("Initializing Athena Orchestrator");
 
-            AthenaOrchestrator orchestrator = new AthenaOrchestrator<>(queryString, athenaQueryExecutor);
+            AthenaOrchestrator orchestrator = new AthenaOrchestrator(queryString, athenaQueryExecutor);
             logger.log("Executing Athena Orchestrator");
             orchestrator.execute();
             String result = gson.toJson( orchestrator.getResult());
