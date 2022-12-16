@@ -26,10 +26,12 @@ public class TransactionRepository implements ITransactionRepository {
 
   @Override
   public Transaction getTransaction(String id) {
-    return transactions.stream()
+    // TODO fix and find
+    return null;
+    /* return transactions.stream()
       .filter(transaction -> id == transaction.getId())
       .findAny()
-      .orElse(null);
+      .orElse(null); */
   }
 
 }
