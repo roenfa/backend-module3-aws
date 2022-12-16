@@ -1,32 +1,35 @@
 package org.example.services;
 
 import lombok.SneakyThrows;
-import software.amazon.awssdk.services.athena.AthenaClient;
+import org.example.models.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AthenaOrchestrator<T>
-{
+public class AthenaOrchestrator {
+    private static final Logger logger = LoggerFactory.getLogger(AthenaService.class);
     private final String query;
-    private final AthenaClient athenaClient;
+    private AthenaService athenaService;
 
-    public AthenaOrchestrator(AthenaClient athenaClient, String query) {
+    public AthenaOrchestrator(String query, AthenaService athenaService) {
         this.query = query;
-        this.athenaClient = athenaClient;
+        this.athenaService = athenaService;
     }
 
     @SneakyThrows
-    public List<T> execute() {
+    public List<Transaction> execute() {
+        List<Transaction> transactionList = new ArrayList<>();
         String queryExecutionId =
-                AthenaQueryExecutor.submitAthenaQuery(athenaClient, this.query);
-        try {
-            AthenaQueryExecutor.waitForQueryToComplete(athenaClient, queryExecutionId);
-            AthenaQueryExecutor.processResultRows(
-                    athenaClient, queryExecutionId);
-        } catch(InterruptedException e) {
-            System.out.println("Error: " + e.getMessage());
+                this.athenaService.submitQuery(this.query);
+
+        this.athenaService.waitForQueryToComplete(queryExecutionId);
+        transactionList = this.athenaService.processQueryResult(queryExecutionId);
+        for (Transaction t: transactionList) {
+            logger.info("Transaction = " + t);
         }
 
-        return null;
+        return transactionList;
     }
 }
