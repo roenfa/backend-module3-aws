@@ -11,8 +11,12 @@ import software.amazon.awssdk.services.lambda.model.InvokeRequest;
 import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 
 public class FirstHandler implements RequestHandler<Object, Object> {
-    private static final String SECOND_FUNCTION_NAME = "RESecondFunction";
-    private final LambdaClient lambdaClient = DependencyFactory.lambdaClient();
+    private static final String SECOND_FUNCTION_NAME = "djauregui-SecondFunction";
+    private final LambdaClient lambdaClient;
+
+    public FirstHandler() {
+        lambdaClient = DependencyFactory.lambdaClient();
+    }
 
     @Override
     public Object handleRequest(Object input, Context context) {
@@ -33,7 +37,9 @@ public class FirstHandler implements RequestHandler<Object, Object> {
         InvokeResponse response = lambdaClient.invoke(invokeRequest);
 
         System.out.println("Response: " + response.toString());
-        System.out.println("Payload: " + response.payload().asUtf8String());
+        System.out.println("Payload String: " + response.payload().toString());
+        System.out.println("Payload Utf8String: " + response.payload().asUtf8String());
+        System.out.println("Payload Data Temperature: " + payloadData.getTemperature());
 
         return input;
     }

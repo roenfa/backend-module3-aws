@@ -3,9 +3,16 @@ package org.example.services;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CopyObjectResult;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsResult;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class AWSS3Service implements IAWSS3Service {
     private final AmazonS3 s3Client;
@@ -37,5 +44,23 @@ public class AWSS3Service implements IAWSS3Service {
     @Override
     public void deleteObject(String bucketName, String objectKey) {
         this.s3Client.deleteObject(bucketName, objectKey);
+    }
+
+    @Override
+    public S3Object getObject(String bucketName, String key) {
+        return this.s3Client.getObject(bucketName, key);
+    }
+
+    @Override
+    public ObjectMetadata getObject(GetObjectRequest request, File file) {
+        return this.s3Client.getObject(request, file);
+    }
+
+    @Override
+    public DeleteObjectsResult deleteObjects(String bucketName, ArrayList<KeyVersion> keys) {
+        DeleteObjectsRequest request = new DeleteObjectsRequest(bucketName)
+            .withKeys(keys)
+            .withQuiet(true);
+        return this.s3Client.deleteObjects(request);
     }
 }

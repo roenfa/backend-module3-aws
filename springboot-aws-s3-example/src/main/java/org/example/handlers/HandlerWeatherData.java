@@ -12,14 +12,19 @@ public class HandlerWeatherData implements RequestHandler<WeatherData, String> {
 
     @Override
     public String handleRequest(WeatherData input, Context context) {
-        String response;
-
         LambdaLogger logger = context.getLogger();
 
-        logger.log("INPUT " + input);
+        logger.log("Received request with WeatherData: " + input);
 
-        response = gson.toJson(input);
+        // Validate the temperature and pressureHPa attributes of the WeatherData model
+        if(input.getTemperature() != null && input.getPressureHPa() > 0){
+            String response = gson.toJson(input);
 
-        return response;
+            logger.log("Returning response: " + response);
+            
+            return response;
+        }else{
+            return "Invalid temperature or pressureHPa enter";
+        }
     }
 }
