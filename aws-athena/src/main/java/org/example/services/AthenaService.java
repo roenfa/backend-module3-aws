@@ -3,6 +3,12 @@ package org.example.services;
 import org.example.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import software.amazon.awssdk.services.athena.model.*;
 import software.amazon.awssdk.services.athena.AthenaClient;
 import software.amazon.awssdk.services.athena.model.QueryExecutionContext;
@@ -12,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AthenaService<T> implements IAthenaService {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(AthenaService.class);
     private final AthenaClient athenaClient;
+    JsonArray resultList = new JsonArray();
 
     public AthenaService(AthenaClient athenaClient) {
         this.athenaClient = athenaClient;
@@ -80,12 +88,21 @@ public class AthenaService<T> implements IAthenaService {
             columns.add(columnInfo.name());
         }
         for (Row row: rowList) {
+            JsonObject rowJson = new JsonObject();
             int index = 0;
             for (Datum datum : row.data()) {
+                rowJson.addProperty(columns.get(index), datum.varCharValue());
                 logger.info(columns.get(index) + ": " + datum.varCharValue());
                 index++;
             }
+            if(rowList.indexOf(row) > 0){
+                resultList.add(rowJson);
+            }
             logger.info("===================================");
         }
+    }
+
+    public JsonArray getResult(){
+        return this.resultList;
     }
 }

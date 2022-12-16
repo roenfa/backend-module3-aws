@@ -1,21 +1,20 @@
 package org.example.services;
 
-import lombok.SneakyThrows;
 
-import java.util.List;
+import com.google.gson.JsonArray;
 
 public class AthenaOrchestrator<T>
 {
     private final String query;
-    private AthenaService athenaService;
+    private AthenaService<T> athenaService;
+    JsonArray result;
 
-    public AthenaOrchestrator(String query, AthenaService athenaService) {
+    public AthenaOrchestrator(String query, AthenaService<T> athenaService) {
         this.query = query;
         this.athenaService = athenaService;
     }
 
-    @SneakyThrows
-    public List<T> execute() {
+    public void execute() {
         String queryExecutionId =
                 this.athenaService.submitQuery(this.query);
         try {
@@ -24,7 +23,9 @@ public class AthenaOrchestrator<T>
         } catch(InterruptedException e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
 
-        return null;
+    public JsonArray getResult(){
+        return this.athenaService.getResult();
     }
 }
