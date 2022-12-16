@@ -19,6 +19,12 @@ dependencies {
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
+
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/athena
+    implementation 'software.amazon.awssdk:athena:2.17.202'
+
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
+    implementation 'com.amazonaws:aws-java-sdk:1.12.231'
 }
 
 test {
