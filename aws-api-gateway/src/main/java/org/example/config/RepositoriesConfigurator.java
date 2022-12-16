@@ -20,7 +20,7 @@ public class RepositoriesConfigurator {
         return books;
     }
     @Bean
-    public ITransactionRepository iTransactionRepository(){
+    public ITransactionRepository initTransactionRepository(){
         java.sql.Date date = java.sql.Date.valueOf("2022-12-16");
 
         var transactions = new TransactionRepository();
