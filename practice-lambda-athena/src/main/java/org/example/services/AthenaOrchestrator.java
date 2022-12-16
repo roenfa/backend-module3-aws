@@ -27,7 +27,7 @@ public class AthenaOrchestrator {
         this.athenaService.waitForQueryToComplete(queryExecutionId);
         transactionList = this.athenaService.processQueryResult(queryExecutionId);
         for (Products t: transactionList) {
-            logger.info("Transaction = " + t);
+            logger.info("Products = " + t);
         }
 
         return transactionList;

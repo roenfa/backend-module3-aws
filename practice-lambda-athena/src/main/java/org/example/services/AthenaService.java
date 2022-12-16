@@ -83,11 +83,11 @@ public class AthenaService implements IAthenaService {
 
                 for (Row myRow : rows.subList(1, rows.size())) { // skip first row – column names
                     List<Datum> allData = myRow.data();
-                    Products transaction = new Products();
-                    transaction.setId(allData.get(0).varCharValue());
-                    transaction.setname(allData.get(1).varCharValue());
-                    transaction.setstock(Integer.parseInt(allData.get(2).varCharValue()));
-                    transactionList.add(transaction);
+                    Products product = new Products();
+                    product.setId(allData.get(0).varCharValue());
+                    product.setname(allData.get(1).varCharValue());
+                    product.setstock(Integer.parseInt(allData.get(2).varCharValue()));
+                    transactionList.add(product);
                 }
             }
         } catch (AthenaException e) {

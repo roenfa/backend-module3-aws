@@ -3,6 +3,7 @@ package org.example.handlers;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
+
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.lambda.LambdaClient;
 import software.amazon.awssdk.services.lambda.model.InvocationType;
@@ -16,9 +17,8 @@ public class FirstHandler implements RequestHandler<Object, Object> {
     @Override
     public Object handleRequest(Object input, Context context) {
 //        var payload = SdkBytes.fromUtf8String("{\"input\":\"bootcamp\"}");
-        var payloadData = "[{\"Id\":1,\"name\":\"oreo\",\"stock\":3},{\"Id\":2,\"name\":\"mantequillaregia\",\"stock\":1}]";
+        String payloadData = "[{\"Id\":1,\"name\":\"oreo\",\"stock\":3},{\"Id\":2,\"name\":\"mantequillaregia\",\"stock\":1}]";
 
-        //This will convert object to JSON String
         String inputJSON = new Gson().toJson(payloadData);
         SdkBytes payload = SdkBytes.fromUtf8String(inputJSON);
 
