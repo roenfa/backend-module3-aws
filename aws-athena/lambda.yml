@@ -5,9 +5,9 @@ Resources:
   function:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: build/distributions/springboot-aws-s3-example-1.0-SNAPSHOT.zip
-      Handler: org.example.handlers.FirstHandler
-      FunctionName: REFirstFunction
+      CodeUri: build/distributions/aws-athena-1.0-SNAPSHOT.zip
+      Handler: org.example.handlers.LambdaAthena
+      FunctionName: SMM-MF-lambdaFunction
       Runtime: java11
       Description: Java function
       MemorySize: 512
@@ -18,5 +18,5 @@ Resources:
         - AWSLambda_ReadOnlyAccess
         - AWSXrayWriteOnlyAccess
         - AWSLambdaVPCAccessExecutionRole
-        -
+        - AmazonAthenaFullAccess
       Tracing: Active
