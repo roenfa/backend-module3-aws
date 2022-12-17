@@ -38,6 +38,9 @@ public class LambdaTransactionHandler implements RequestStreamHandler {
   @Override
   public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
     logger.info("TRANSACTION - Handle Request calling to proxy stream");
+    String data= input != null ? input.toString() : "{}";
+    context.getLogger().log("Input: " + data);
+
     handler.proxyStream(input, output, context);
     logger.info("TRANSACTION - Calling to proxy stream completed!!");
   }

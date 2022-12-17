@@ -25,7 +25,7 @@ public class TransactionController {
   }
 
   @GetMapping(value = "/transactions")
-  public Collection<Transaction> geTransactions(){
+  public Collection<Transaction> getTransactions(){
     return this.repository.getAll();
   }
 
