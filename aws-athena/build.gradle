@@ -18,9 +18,11 @@ dependencies {
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/athena
     implementation 'software.amazon.awssdk:athena:2.17.202'
+    // GSon
+    implementation 'com.google.code.gson:gson:2.8.8'
 
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
-    implementation 'com.amazonaws:aws-java-sdk:1.12.231'
+    //implementation 'com.amazonaws:aws-java-sdk:1.12.231'
 
     // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
