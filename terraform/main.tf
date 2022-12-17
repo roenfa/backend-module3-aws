@@ -10,29 +10,19 @@ terraform {
 
   # It tells Terraform that we want to use an S3 backend instead of our 
   # local system to manage our state file
-  # backend "s3" {
-  #   bucket         = "bucket-megamind"
-  #   key            = "state/terraform.tfstate"
-  #   region         = "us-east-1"
-  #   encrypt        = true
-  #   kms_key_id     = "alias/terraform_bucket_key_megamind"
-  #   dynamodb_table = "dynamo_megamind_tf_state"
-  # }
+  backend "s3" {
+    bucket         = "dj-ag-final-project"
+    key            = "state/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    kms_key_id     = "alias/terraform_bucket_dj_ag_final"
+    dynamodb_table = "dynamo_dj_ag_final_project_tfstate"
+  }
 }
 
 ################################################################################
 # Calling Modules
 ################################################################################
-# Tf state (Dynamo DB Tf state)
-# module "dynamo_tfstate" {
-#   source = "./modules/dynamo_tfstate"
-#   dynamodb_table_name = "dynamo_megamind_tf_state"
-#   bucket_name = var.bucket_name
-#   depends_on = [
-#     module.s3-csv
-#   ]
-# }
-
 # Bucket
 module "bucket" {
   source      = "./modules/s3"
