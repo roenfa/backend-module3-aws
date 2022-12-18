@@ -21,10 +21,8 @@ public class RepositoriesConfigurator {
     }
     @Bean
     public ITransactionRepository initTransactionRepository(){
-        java.sql.Date date = java.sql.Date.valueOf("2022-12-16");
-
         var transactions = new TransactionRepository();
-        transactions.save(new Transaction("2163962193", "REFUND", 213213,date));
+        transactions.save(new Transaction("2163962193", "REFUND", 213213,"2022-12-16"));
 
         return transactions;
     }
