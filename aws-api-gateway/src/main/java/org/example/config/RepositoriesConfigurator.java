@@ -22,7 +22,8 @@ public class RepositoriesConfigurator {
     @Bean
     public ITransactionRepository initTransactionRepository(){
         var transactions = new TransactionRepository();
-        transactions.save(new Transaction("2163962193", "REFUND", 213213,"2022-12-16"));
+        Transaction transaction = new Transaction("2163962193", "REFUND", 213213,"2022-12-16");
+        transactions.save(transaction);
 
         return transactions;
     }
