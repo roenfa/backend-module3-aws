@@ -25,13 +25,21 @@ public class TransactionRepository implements ITransactionRepository {
   }
 
   @Override
-  public Transaction getTransaction(String id) {
-    // TODO fix and find
+  public Transaction findById(String id) {
+    for(Transaction transaction: getAll()){
+      if(transaction.getId().equals(id)){
+        return transaction;
+      }
+    }
+
     return null;
-    /* return transactions.stream()
-      .filter(transaction -> id == transaction.getId())
-      .findAny()
-      .orElse(null); */
   }
+
+  @Override
+  public void deleteById(String id) {
+    // TODO Auto-generated method stub
+  }
+
+  
 
 }

@@ -29,9 +29,9 @@ public class TransactionController {
     return this.repository.getAll();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/transactions/{id}")
   public Transaction getTransaction(@PathVariable("id") String id){
-    Transaction transaction = this.repository.getTransaction(id);
+    Transaction transaction = this.repository.findById(id);
     return transaction;
   }
 
