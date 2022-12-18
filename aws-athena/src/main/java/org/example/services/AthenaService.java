@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.constants.Constants;
+import org.example.models.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.athena.model.*;
@@ -11,7 +12,7 @@ import software.amazon.awssdk.services.athena.paginators.GetQueryResultsIterable
 import java.util.ArrayList;
 import java.util.List;
 
-public class AthenaService<T> implements IAthenaService {
+public class AthenaService implements IAthenaService {
     private static final Logger logger = LoggerFactory.getLogger(AthenaService.class);
     private final AthenaClient athenaClient;
 
@@ -37,55 +38,91 @@ public class AthenaService<T> implements IAthenaService {
         return startQueryExecutionResponse.queryExecutionId();
     }
 
-    // Waits for an Amazon Athena query to complete, fail or to be cancelled.
-    public void waitForQueryToComplete(String queryExecutionId) throws InterruptedException {
+    // Wait for an Amazon Athena query to complete, fail or to be cancelled
+    public void waitForQueryToComplete(String queryExecutionId) {
+
         GetQueryExecutionRequest getQueryExecutionRequest = GetQueryExecutionRequest.builder()
                 .queryExecutionId(queryExecutionId).build();
 
         GetQueryExecutionResponse getQueryExecutionResponse;
         boolean isQueryStillRunning = true;
-
         while (isQueryStillRunning) {
             getQueryExecutionResponse = this.athenaClient.getQueryExecution(getQueryExecutionRequest);
-            String queryState =
-                    getQueryExecutionResponse.queryExecution().status().state().toString();
+            String queryState = getQueryExecutionResponse.queryExecution().status().state().toString();
             if (queryState.equals(QueryExecutionState.FAILED.toString())) {
-                throw new RuntimeException("Error message: " + getQueryExecutionResponse
+                throw new RuntimeException("The Amazon Athena query failed to run with error message: " + getQueryExecutionResponse
                         .queryExecution().status().stateChangeReason());
             } else if (queryState.equals(QueryExecutionState.CANCELLED.toString())) {
                 throw new RuntimeException("The Amazon Athena query was cancelled.");
             } else if (queryState.equals(QueryExecutionState.SUCCEEDED.toString())) {
                 isQueryStillRunning = false;
             } else {
-                Thread.sleep(Constants.SLEEP_AMOUNT_IN_MS);
+                // Sleep an amount of time before retrying again
+                try {
+                    Thread.sleep(Constants.SLEEP_AMOUNT_IN_MS);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            logger.info("The current status is: " + queryState);
+            logger.debug("The current status is: " + queryState);
         }
     }
-    public void processQueryResult(String queryExecutionId) {
-        GetQueryResultsRequest getQueryResultsRequest = GetQueryResultsRequest.builder()
-                .queryExecutionId(queryExecutionId).build();
-        GetQueryResultsIterable getQueryResultsResults = this.athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
-        for (GetQueryResultsResponse resultResponse : getQueryResultsResults) {
-            List<ColumnInfo> columnInfoList = resultResponse.resultSet().resultSetMetadata().columnInfo();
-            int resultSize = resultResponse.resultSet().rows().size();
-            logger.info("Result size: " + resultSize);
-            List<Row> results = resultResponse.resultSet().rows();
-            processRow(results, columnInfoList);
-        }
-    }
-    private void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
-        List<String> columns = new ArrayList<>();
-        for (ColumnInfo columnInfo : columnInfoList) {
-            columns.add(columnInfo.name());
-        }
-        for (Row row: rowList) {
-            int index = 0;
-            for (Datum datum : row.data()) {
-                logger.info(columns.get(index) + ": " + datum.varCharValue());
-                index++;
+
+    public List<Transaction> processQueryResult(String queryExecutionId) {
+        List<Transaction> transactionList = new ArrayList<>();
+        List<Row> rows;
+
+        try {
+            GetQueryResultsRequest getQueryResultsRequest = GetQueryResultsRequest.builder()
+                    .queryExecutionId(queryExecutionId).build();
+
+            GetQueryResultsIterable getQueryResultsResults = this.athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
+
+            for (GetQueryResultsResponse result : getQueryResultsResults) {
+                rows = result.resultSet().rows();
+
+                for (Row myRow : rows.subList(1, rows.size())) { // skip first row – column names
+                    List<Datum> allData = myRow.data();
+                    Transaction transaction = new Transaction();
+                    transaction.setId(allData.get(0).varCharValue());
+                    transaction.setType(allData.get(1).varCharValue());
+                    transaction.setAmount(Double.parseDouble(allData.get(2).varCharValue()));
+                    transaction.setDate(allData.get(3).varCharValue());
+                    transactionList.add(transaction);
+                }
             }
-            logger.info("===================================");
+        } catch (AthenaException e) {
+            logger.error(e.getMessage());
         }
+
+        return transactionList;
     }
+//
+//    public void processQueryResult(String queryExecutionId) {
+//        GetQueryResultsRequest getQueryResultsRequest = GetQueryResultsRequest.builder()
+//                .queryExecutionId(queryExecutionId).build();
+//        GetQueryResultsIterable getQueryResultsResults = this.athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
+//        for (GetQueryResultsResponse resultResponse : getQueryResultsResults) {
+//            List<ColumnInfo> columnInfoList = resultResponse.resultSet().resultSetMetadata().columnInfo();
+//            int resultSize = resultResponse.resultSet().rows().size();
+//            logger.info("Result size: " + resultSize);
+//            List<Row> results = resultResponse.resultSet().rows();
+//            this.processRow(results, columnInfoList);
+//        }
+//    }
+//    private void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
+//        List<String> columns = new ArrayList<>();
+//        for (ColumnInfo columnInfo : columnInfoList) {
+//            columns.add(columnInfo.name());
+//        }
+//        for (Row row: rowList) {
+//            int index = 0;
+//            for (Datum datum : row.data()) {
+//
+//                logger.info(columns.get(index) + ": " + datum.varCharValue());
+//                index++;
+//            }
+//            logger.info("===================================");
+//        }
+//    }
 }

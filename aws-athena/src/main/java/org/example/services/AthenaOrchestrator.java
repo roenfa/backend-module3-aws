@@ -1,11 +1,15 @@
 package org.example.services;
 
 import lombok.SneakyThrows;
+import org.example.models.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AthenaOrchestrator<T>
-{
+public class AthenaOrchestrator {
+    private static final Logger logger = LoggerFactory.getLogger(AthenaService.class);
     private final String query;
     private AthenaService athenaService;
 
@@ -15,16 +19,17 @@ public class AthenaOrchestrator<T>
     }
 
     @SneakyThrows
-    public List<T> execute() {
+    public List<Transaction> execute() {
+        List<Transaction> transactionList = new ArrayList<>();
         String queryExecutionId =
                 this.athenaService.submitQuery(this.query);
-        try {
-            this.athenaService.waitForQueryToComplete(queryExecutionId);
-            this.athenaService.processQueryResult(queryExecutionId);
-        } catch(InterruptedException e) {
-            System.out.println("Error: " + e.getMessage());
+
+        this.athenaService.waitForQueryToComplete(queryExecutionId);
+        transactionList = this.athenaService.processQueryResult(queryExecutionId);
+        for (Transaction t: transactionList) {
+            logger.info("Transaction = " + t);
         }
 
-        return null;
+        return transactionList;
     }
 }
