@@ -4,24 +4,21 @@ package org.example.models;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Transaction {
   private String id;
   private String type;
   private double amount;
   private String date;
-
-  public Transaction(String id, String type, double amount, String date) {
-    this.id = id;
-    this.type = type;
-    this.amount = amount;
-    this.date = date;
-  }
 
   @Override
   public String toString() {
