@@ -28,14 +28,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
-
-
-    // https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
-    testImplementation 'org.mockito:mockito-junit-jupiter:4.9.0'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-    // https://mvnrepository.com/artifact/org.mockito/mockito-inline
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.10.0'
 }
 
 test {

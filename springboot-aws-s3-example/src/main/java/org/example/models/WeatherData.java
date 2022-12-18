@@ -4,7 +4,7 @@ public class WeatherData {
     private Integer temperature;//required
     private Double humidityPoint;
     private Integer windKmh;
-    private Integer pressureHPa;//required
+    // private Integer pressureHPa;//required
 
     public Integer getTemperature(){
         return this.temperature;
