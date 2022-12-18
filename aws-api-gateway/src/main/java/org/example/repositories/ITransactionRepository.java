@@ -7,5 +7,6 @@ import org.example.models.Transaction;
 public interface ITransactionRepository {
   Transaction save(Transaction transaction);
   Collection<Transaction> getAll();
-  Transaction getTransaction(String id);
+  Transaction findById(String id);
+  void deleteById(String id);
 }

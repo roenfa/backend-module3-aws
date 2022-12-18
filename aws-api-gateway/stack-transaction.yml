@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Using Spring Boot in Lambda example
+# Description: Using Spring Boot in Lambda example
+Description: Lambda Spring Boot - Api Gateway
 
 Parameters:
   apiGatewayStageName:
@@ -13,7 +14,6 @@ Parameters:
     Type: String
   s3BucketKey:
     Type: String
-
 
 Resources:
   apiGateway:
@@ -31,6 +31,13 @@ Resources:
       RestApiId: !Ref apiGateway
       ParentId: !GetAtt apiGateway.RootResourceId
       PathPart: 'transactions'
+
+  transactionsIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !Ref transactionsResource
+      PathPart: '{id}'
 
   transactionsGetMethod:
     Type: AWS::ApiGateway::Method
@@ -60,11 +67,44 @@ Resources:
       ResourceId: !Ref transactionsResource
       RestApiId: !Ref apiGateway
 
+  transactionsFindByIdMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref transactionsIdResource
+      RestApiId: !Ref apiGateway
+
+  # transactionsIdGetMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     AuthorizationType: NONE
+  #     HttpMethod: GET
+  #     Integration:
+  #       IntegrationHttpMethod: POST
+  #       Type: AWS_PROXY
+  #       Uri: !Sub
+  #         - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+  #         - lambdaArn: !GetAtt lambdaFunction.Arn
+  #     ResourceId: !Ref transactionsResource
+  #     RestApiId: !Ref apiGateway
+  #     RequestParameters:
+  #       Path:
+  #         '{id}': true
+  #     RequestValidatorId: default
+
   apiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
       - transactionsGetMethod
       - transactionsPostMethod
+      - transactionsFindByIdMethod
     Properties:
       RestApiId: !Ref apiGateway
       StageName: !Ref apiGatewayStageName
