@@ -19,19 +19,22 @@ dependencies {
     // https://mvnrepository.com/artifact/software.amazon.awssdk/athena
     implementation 'software.amazon.awssdk:athena:2.17.202'
 
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-athena
+    implementation 'com.amazonaws:aws-java-sdk-athena:1.12.366'
+
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
     //implementation 'com.amazonaws:aws-java-sdk:1.12.231'
 
     // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
 
-    //testImplementation 'org.projectlombok:lombok:1.18.22'
+    testImplementation 'org.projectlombok:lombok:1.18.22'
 
     // GSon
     // implementation 'com.google.code.gson:gson:2.8.8'
 
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
-   // compileOnly 'org.projectlombok:lombok:1.18.24'
+     //https://mvnrepository.com/artifact/org.projectlombok/lombok
+     compileOnly 'org.projectlombok:lombok:1.18.24'
 
 
     // https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
@@ -50,7 +53,10 @@ task buildZip(type: Zip) {
 }
 
 build.dependsOn buildZip
-
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 test {
     useJUnitPlatform()
 }

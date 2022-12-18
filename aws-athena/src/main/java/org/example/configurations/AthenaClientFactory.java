@@ -18,10 +18,10 @@ public class AthenaClientFactory {
 //    }
 
     @Bean
-    @Profile("dev")
+    @Profile("default")
     public AthenaClient createClientDev() {
         return AthenaClient.builder()
                 .region(Region.US_EAST_1)
-                .credentialsProvider(ProfileCredentialsProvider.create()).build();
+                .build();
     }
 }

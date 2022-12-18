@@ -11,7 +11,7 @@ Resources:
       Runtime: java11
       Description: Java function
       MemorySize: 512
-      Timeout: 10
+      Timeout: 60
       # Function's execution role
       Policies:
         - AWSLambdaBasicExecutionRole
@@ -19,4 +19,5 @@ Resources:
         - AWSXrayWriteOnlyAccess
         - AWSLambdaVPCAccessExecutionRole
         - AmazonAthenaFullAccess
+        - AmazonS3FullAccess
       Tracing: Active
