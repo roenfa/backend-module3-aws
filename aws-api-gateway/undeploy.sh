@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
-ARTIFACT_BUCKET='re-api-gateway'
-STACK_NAME='re-api-gateway-lambda'
+ARTIFACT_BUCKET='mf-athena-s3'
+STACK_NAME='smm-api-gateway-lambda'
 AWS_PROFILE=$1
 
 echo "Deleting stacks"

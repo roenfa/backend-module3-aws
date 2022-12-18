@@ -32,6 +32,27 @@ Resources:
       ParentId: !GetAtt apiGateway.RootResourceId
       PathPart: 'books'
 
+  booksIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref booksResource
+      PathPart: '{id}'
+      RestApiId: !Ref apiGateway
+
+  bookByIdMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId: !Ref booksIdResource
+      RestApiId: !Ref apiGateway
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+
   booksGetMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -65,6 +86,7 @@ Resources:
     DependsOn:
       - booksGetMethod
       - booksPostMethod
+      - bookByIdMethod
     Properties:
       RestApiId: !Ref apiGateway
       StageName: !Ref apiGatewayStageName
@@ -73,7 +95,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: re-api-gateway
+        S3Bucket: mf-athena-s3
         S3Key: !Ref s3BucketKey
       Description: The Lambda function
       FunctionName: !Ref functionName

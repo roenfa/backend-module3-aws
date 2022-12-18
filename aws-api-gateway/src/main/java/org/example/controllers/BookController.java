@@ -24,8 +24,11 @@ public class BookController {
     public Collection<Book> getBooks() {
         return this.repository.getAll();
     }
-
-    @RequestMapping(path = "/books", method = RequestMethod.POST)
+    @GetMapping(path = "books/{id}")
+    public Book getBookById(@PathVariable("id") int id){
+        return this.repository.getById(id);
+    }
+    @PostMapping(path = "/books")
     public Book saveBook(@RequestBody Book book) {
         logger.info("Request post");
         return this.repository.save(book);

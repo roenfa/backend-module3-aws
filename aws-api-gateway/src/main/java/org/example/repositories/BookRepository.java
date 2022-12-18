@@ -23,4 +23,14 @@ public class BookRepository implements IBookRepository {
     public Collection<Book> getAll() {
         return this.books;
     }
+
+    @Override
+    public Book getById(int id) {
+        for (Book b: books) {
+            if(b.getId() == id){
+                return b;
+            }
+        }
+        return null;
+    }
 }
