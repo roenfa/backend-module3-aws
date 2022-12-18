@@ -1,8 +1,10 @@
-package org.example.repositories;
+package org.example.repositories.impl;
 
 import org.example.models.Book;
+import org.example.repositories.IBookRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,4 +25,13 @@ public class BookRepository implements IBookRepository {
     public Collection<Book> getAll() {
         return this.books;
     }
+
+    @Override
+    public Book getById(int id) {
+        return this.books.stream()
+                .filter( book -> book.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

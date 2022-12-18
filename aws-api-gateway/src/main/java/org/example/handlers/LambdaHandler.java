@@ -18,26 +18,18 @@ import java.io.OutputStream;
 
 public class LambdaHandler implements RequestStreamHandler {
     private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
-    private static final Logger logger = LoggerFactory.getLogger(LambdaHandler.class);
-
     static {
         try {
-            handler = new SpringBootProxyHandlerBuilder<AwsProxyRequest>()
-                    .defaultProxy()
-                    .initializationWrapper(new InitializationWrapper())
-                    .servletApplication()
-                    .springBootApplication(Main.class)
-                    .buildAndInitialize();
+            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Main.class);
         } catch (ContainerInitializationException e) {
             e.printStackTrace();
-            throw new RuntimeException("Could not initialize Spring boot app" + e);
+            throw new RuntimeException("Could not initialize Spring Boot application", e);
         }
     }
 
     @Override
-    public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-        logger.info("Handle Request calling to proxy stream");
-        handler.proxyStream(input, output, context);
-        logger.info("Calling to proxy stream completed!!");
+    public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
+            throws IOException {
+        handler.proxyStream(inputStream, outputStream, context);
     }
 }

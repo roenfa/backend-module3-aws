@@ -16,6 +16,7 @@ Parameters:
 
 
 Resources:
+
   apiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -25,12 +26,59 @@ Resources:
           - REGIONAL
       Name: !Ref apiGatewayName
 
+  # =====================
+  # Book Resources
+  # =====================
+
   booksResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
       ParentId: !GetAtt apiGateway.RootResourceId
       PathPart: 'books'
+
+  booksIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !Ref booksResource
+      PathPart: '{id}'
+
+  # =====================
+  # Transaction Resources
+  # =====================
+
+  transactionsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !GetAtt apiGateway.RootResourceId
+      PathPart: 'transactions'
+
+  transactionsIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !Ref transactionsResource
+      PathPart: '{id}'
+
+#   =====================
+#   Book Methods
+#   =====================
+
+  booksGetByIdMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref booksIdResource
+      RestApiId: !Ref apiGateway
 
   booksGetMethod:
     Type: AWS::ApiGateway::Method
@@ -60,11 +108,63 @@ Resources:
       ResourceId: !Ref booksResource
       RestApiId: !Ref apiGateway
 
+  # =====================
+  # Transaction Methods
+  # =====================
+
+  transactionsGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref transactionsResource
+      RestApiId: !Ref apiGateway
+
+  transactionsGetByIdMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref transactionsIdResource
+      RestApiId: !Ref apiGateway
+
+  transactionsPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref transactionsResource
+      RestApiId: !Ref apiGateway
+
+  # -------
+
   apiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
       - booksGetMethod
       - booksPostMethod
+      - booksGetByIdMethod
+      - transactionsPostMethod
+      - transactionsGetMethod
+      - transactionsGetByIdMethod
     Properties:
       RestApiId: !Ref apiGateway
       StageName: !Ref apiGatewayStageName
@@ -73,7 +173,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: re-api-gateway
+        S3Bucket: jvallecilla-s3
         S3Key: !Ref s3BucketKey
       Description: The Lambda function
       FunctionName: !Ref functionName
@@ -118,6 +218,22 @@ Resources:
                 Effect: Allow
                 Resource:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${functionName}:*
+              - Action:
+                  - athena:*
+                Effect: Allow
+                Resource:
+                  - '*'
+              - Action:
+                  - s3:*
+                Effect: Allow
+                Resource:
+                  - '*'
+              - Action:
+                  - glue:*
+                Effect: Allow
+                Resource:
+                  - '*'
+
           PolicyName: lambda
 
   lambdaLogGroup:
