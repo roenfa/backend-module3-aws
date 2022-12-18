@@ -2,12 +2,6 @@ package org.example.repositories;
 
 import org.example.models.Book;
 
-import java.util.Collection;
-
-public interface IBookRepository  {
-    Book save(Book book);
-    Collection<Book> getAll();
-
+public interface IBookRepository extends IRepository<Book> {
     Book getById(int id);
-
 }

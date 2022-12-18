@@ -1,11 +1,10 @@
 package org.example.services;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.*;
 
 import java.io.File;
+import java.util.List;
 
 public class AWSS3Service implements IAWSS3Service {
     private final AmazonS3 s3Client;
@@ -17,6 +16,16 @@ public class AWSS3Service implements IAWSS3Service {
     @Override
     public boolean isBucketExist(String bucketName) {
         return this.s3Client.doesBucketExistV2(bucketName);
+    }
+
+    @Override
+    public S3Object getObject(String bucketName, String key) {
+        try {
+            return this.s3Client.getObject(bucketName, key);
+        }catch (Exception e){
+            System.out.println( e.getMessage());
+        }
+        return null;
     }
 
     @Override
@@ -38,4 +47,13 @@ public class AWSS3Service implements IAWSS3Service {
     public void deleteObject(String bucketName, String objectKey) {
         this.s3Client.deleteObject(bucketName, objectKey);
     }
+
+    @Override
+    public void deleteObjects(String bucketName, List<DeleteObjectsRequest.KeyVersion> keyVersions) {
+        this.s3Client.deleteObjects(
+                new DeleteObjectsRequest(bucketName).withKeys(keyVersions)
+        );
+        System.out.println("remove items");
+    }
+
 }

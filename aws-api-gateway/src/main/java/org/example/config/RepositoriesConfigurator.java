@@ -1,8 +1,11 @@
 package org.example.config;
 
 import org.example.models.Book;
-import org.example.repositories.BookRepository;
+import org.example.models.Transaction;
+import org.example.repositories.ITransactionRepository;
+import org.example.repositories.impl.BookRepository;
 import org.example.repositories.IBookRepository;
+import org.example.repositories.impl.TransactionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +24,12 @@ public class RepositoriesConfigurator {
         books.save(new Book(8, "book8"));
         books.save(new Book(9, "book9"));
         books.save(new Book(10, "book10"));
-
         return books;
     }
+
+    @Bean
+    public ITransactionRepository initTransactionRepository() {
+        return new TransactionRepository();
+    }
+
 }
