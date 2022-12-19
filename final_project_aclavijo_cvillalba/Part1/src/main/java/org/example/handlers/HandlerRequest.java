@@ -70,7 +70,7 @@ public class HandlerRequest implements RequestStreamHandler {
         // logger.log("responseList : "+ responseList);
         String result = gson.toJson(responseList);
         // logger.log("result : "+ result);
-        writer.write(gson.toJson(result));         
+        writer.write(result);         
         reader.close();
         writer.close();
     }
