@@ -35,8 +35,4 @@ public class AthenaOrchestrator {
         }
         return transactionList;
     }
-
-    public JsonArray getResult(){
-        return this.athenaService.getResult();
-    }
 }

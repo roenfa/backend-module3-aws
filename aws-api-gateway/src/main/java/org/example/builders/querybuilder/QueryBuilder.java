@@ -14,18 +14,22 @@ public class QueryBuilder {
     }
 
     public void from(String table){
-        this.from = "FROM " + table;
+        this.from = " FROM " + "(\"" + table + "\")";
     }
 
-    public void where(List<String[]> conditions){
-        String result = "";
-        for(String[] c: conditions){
-            int size = conditions.size() - conditions.indexOf(c);
-            result += "WHERE "
-            + String.join(" ", c) 
-            + (size == 1 ? "" : " AND ");
-        }
-        this.where = result;
+    public void where(String conditions){
+        this.where = " WHERE " + conditions;
+        // String result = " WHERE ";
+        // for(String[] c: conditions){
+        //     int size = conditions.size() - conditions.indexOf(c);
+        //     result += String.join(" ", c) 
+        //     + (size == 1 ? "" : " AND ");
+        // }
+        // this.where = result;
+    }
+
+    public String getQuery(){
+        return select + from + where + ";";
     }
 
 }

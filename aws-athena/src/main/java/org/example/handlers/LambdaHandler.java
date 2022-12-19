@@ -52,9 +52,8 @@ public class LambdaHandler implements RequestStreamHandler {
 
             AthenaOrchestrator orchestrator = new AthenaOrchestrator(queryString, athenaQueryExecutor);
             logger.log("Executing Athena Orchestrator");
-            orchestrator.execute();
-            String result = gson.toJson( orchestrator.getResult());
-            writer.write(gson.toJson(result));
+            String result = gson.toJson(orchestrator.execute());
+            writer.write(result);
             if (writer.checkError()) {
                 logger.log("WARNING: Writer encountered an error.");
             }

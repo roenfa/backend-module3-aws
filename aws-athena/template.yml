@@ -5,13 +5,13 @@ Resources:
   function:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: build/distributions/aws-api-gateway-1.0-SNAPSHOT.zip
-      Handler: org.example.handlers.FirstHandler
-      FunctionName: lambda-spring-boot-function-cavs
+      CodeUri: build/distributions/springboot-aws-s3-example-1.0-SNAPSHOT.zip
+      Handler: org.example.handlers.LambdaHandler
+      FunctionName: aws-athena-cavs
       Runtime: java11
       Description: Java function
-      MemorySize: 1024
-      Timeout: 100
+      MemorySize: 512
+      Timeout: 10
       # Function's execution role
       Policies:
         - AWSLambdaBasicExecutionRole

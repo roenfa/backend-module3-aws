@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
 Description: Using Spring Boot in Lambda example
 
 Parameters:
@@ -19,7 +19,7 @@ Resources:
   apiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Description: Book API Gateway
+      Description: Transactions API Gateway
       EndpointConfiguration:
         Types:
           - REGIONAL
@@ -60,6 +60,62 @@ Resources:
       ResourceId: !Ref booksResource
       RestApiId: !Ref apiGateway
 
+  proxyResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !Ref transactionsResource
+      PathPart: "{proxy+}"
+
+  proxyAnyMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: ANY
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref proxyResource
+      RestApiId: !Ref apiGateway
+
+  transactionsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !GetAtt apiGateway.RootResourceId
+      PathPart: "transactions"
+
+  transactionsGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref transactionsResource
+      RestApiId: !Ref apiGateway
+
+  transactionsPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt lambdaFunction.Arn
+      ResourceId: !Ref transactionsResource
+      RestApiId: !Ref apiGateway
+
   apiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
@@ -78,7 +134,7 @@ Resources:
       Description: The Lambda function
       FunctionName: !Ref functionName
       Handler: !Ref functionHandler
-      MemorySize: 512
+      MemorySize: 1024
       Role: !GetAtt lambdaIAMRole.Arn
       Runtime: java11
       Timeout: 120
@@ -119,6 +175,12 @@ Resources:
                 Resource:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${functionName}:*
           PolicyName: lambda
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
 
   lambdaLogGroup:
     Type: AWS::Logs::LogGroup

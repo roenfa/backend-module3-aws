@@ -24,7 +24,7 @@ public class AthenaClientFactory {
     
     private final AthenaClientBuilder builder = AthenaClient.builder()
                 .region(Region.US_EAST_1)
-                .credentialsProvider(ProfileCredentialsProvider.create())
+                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
                 .httpClientBuilder(UrlConnectionHttpClient.builder());
 
     @Bean

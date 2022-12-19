@@ -9,8 +9,11 @@ import org.example.repositories.TransactionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import software.amazon.awssdk.services.lambda.LambdaClient;
+
 @Configuration
 public class RepositoriesConfigurator {
+
     @Bean
     public IBookRepository initBookRepository() {
         var books = new BookRepository();
@@ -19,13 +22,11 @@ public class RepositoriesConfigurator {
 
         return books;
     }
+
     @Bean
     public ITransactionRepository iTransactionRepository(){
-        java.sql.Date date = java.sql.Date.valueOf("2022-12-16");
-
-        var transactions = new TransactionRepository();
-        transactions.save(new Transaction("2163962193", "REFUND", 213213,date));
-
-        return transactions;
+        LambdaClient lambdaClient = DependencyFactory.lambdaClient();
+        var transactionRepository = new TransactionRepository(lambdaClient);
+        return  transactionRepository;
     }
 }

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 ARTIFACT_BUCKET='re-api-gateway'
-STACK_NAME='re-api-gateway-lambda'
+STACK_NAME='cavs-api-gateway-lambda'
 AWS_PROFILE=$1
 
 echo "Deleting stacks"

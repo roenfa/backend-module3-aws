@@ -75,25 +75,6 @@ public class AthenaService<T> implements IAthenaService {
             logger.debug("The current status is: " + queryState);
         }
     }
-    private void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
-        List<String> columns = new ArrayList<>();
-        for (ColumnInfo columnInfo : columnInfoList) {
-            columns.add(columnInfo.name());
-        }
-        for (Row row: rowList) {
-            JsonObject rowJson = new JsonObject();
-            int index = 0;
-            for (Datum datum : row.data()) {
-                rowJson.addProperty(columns.get(index), datum.varCharValue());
-                logger.info(columns.get(index) + ": " + datum.varCharValue());
-                index++;
-            }
-            if(rowList.indexOf(row) > 0){
-                resultList.add(rowJson);
-            }
-            logger.info("===================================");
-        }
-    }
 
     public List<Transaction> processQueryResult(String queryExecutionId) {
         List<Transaction> transactionList = new ArrayList<>();
@@ -109,13 +90,21 @@ public class AthenaService<T> implements IAthenaService {
                 rows = result.resultSet().rows();
 
                 for (Row myRow : rows.subList(1, rows.size())) { // skip first row – column names
+                    List<String> columns = new ArrayList<>();
+                    List<ColumnInfo> columnInfoList = result.resultSet().resultSetMetadata().columnInfo();
                     List<Datum> allData = myRow.data();
-                    Transaction transaction = new Transaction();
-                    transaction.setId(allData.get(0).varCharValue());
-                    transaction.setType(allData.get(1).varCharValue());
-                    transaction.setAmount(Double.parseDouble(allData.get(2).varCharValue()));
-                    transaction.setDate(allData.get(3).varCharValue());
-                    transactionList.add(transaction);
+                    JsonObject rowJson = new JsonObject();
+                    for (ColumnInfo columnInfo : columnInfoList) {
+                        columns.add(columnInfo.name());
+                    }
+                    int index = 0;
+                    for (Datum datum : allData) {
+                        rowJson.addProperty(columns.get(index), datum.varCharValue());
+                        logger.info(columns.get(index) + ": " + datum.varCharValue());
+                        index++;
+                    }
+                    Transaction product = gson.fromJson(rowJson, Transaction.class);
+                    transactionList.add(product);
                 }
             }
         } catch (AthenaException e) {
@@ -124,36 +113,4 @@ public class AthenaService<T> implements IAthenaService {
 
         return transactionList;
     }
-
-    public JsonArray getResult(){
-        return this.resultList;
-    }
-//
-//    public void processQueryResult(String queryExecutionId) {
-//        GetQueryResultsRequest getQueryResultsRequest = GetQueryResultsRequest.builder()
-//                .queryExecutionId(queryExecutionId).build();
-//        GetQueryResultsIterable getQueryResultsResults = this.athenaClient.getQueryResultsPaginator(getQueryResultsRequest);
-//        for (GetQueryResultsResponse resultResponse : getQueryResultsResults) {
-//            List<ColumnInfo> columnInfoList = resultResponse.resultSet().resultSetMetadata().columnInfo();
-//            int resultSize = resultResponse.resultSet().rows().size();
-//            logger.info("Result size: " + resultSize);
-//            List<Row> results = resultResponse.resultSet().rows();
-//            this.processRow(results, columnInfoList);
-//        }
-//    }
-//    private void processRow(List<Row> rowList, List<ColumnInfo> columnInfoList) {
-//        List<String> columns = new ArrayList<>();
-//        for (ColumnInfo columnInfo : columnInfoList) {
-//            columns.add(columnInfo.name());
-//        }
-//        for (Row row: rowList) {
-//            int index = 0;
-//            for (Datum datum : row.data()) {
-//
-//                logger.info(columns.get(index) + ": " + datum.varCharValue());
-//                index++;
-//            }
-//            logger.info("===================================");
-//        }
-//    }
 }

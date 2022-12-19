@@ -53,7 +53,7 @@ public class ShopingCartHandler implements RequestStreamHandler {
             System.out.println("Response: " + response.toString());
             System.out.println("Payload: " + response.payload().asUtf8String());
 
-            writer.write(gson.toJson(payloadString));
+            writer.write(gson.toJson(response.payload().asUtf8String()));
             if (writer.checkError()) {
                 logger.log("WARNING: Writer encountered an error.");
             }
