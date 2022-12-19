@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Lambda Spring Boot - Athena
+Resources:
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      # CodeUri: build/distributions/aws-athena-1.0-SNAPSHOT.zip
+      CodeUri: s3://djag-api-gateway/aws-athena-1.0-SNAPSHOT.zip
+      Handler: org.example.handlers.LambdaHandler
+      FunctionName: djag-athena-lambda
+      Runtime: java11
+      Description: Java function
+      MemorySize: 512
+      Timeout: 60
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonAthenaFullAccess
+        - AmazonS3FullAccess
+      Tracing: Active

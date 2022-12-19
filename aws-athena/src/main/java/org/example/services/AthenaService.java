@@ -21,21 +21,27 @@ public class AthenaService implements IAthenaService {
     }
 
     public String submitQuery(String query) {
-
-        QueryExecutionContext queryExecutionContext = QueryExecutionContext.builder()
+        try {
+            QueryExecutionContext queryExecutionContext = QueryExecutionContext.builder()
                 .database(Constants.ATHENA_DEFAULT_DATABASE).build();
 
-        ResultConfiguration resultConfiguration = ResultConfiguration.builder()
-                .outputLocation(Constants.ATHENA_OUTPUT_BUCKET).build();
+            ResultConfiguration resultConfiguration = ResultConfiguration.builder()
+                    .outputLocation(Constants.ATHENA_OUTPUT_BUCKET).build();
 
-        StartQueryExecutionRequest startQueryExecutionRequest = StartQueryExecutionRequest.builder()
-                .queryString(query)
-                .queryExecutionContext(queryExecutionContext)
-                .resultConfiguration(resultConfiguration).build();
+            StartQueryExecutionRequest startQueryExecutionRequest = StartQueryExecutionRequest.builder()
+                    .queryString(query)
+                    .queryExecutionContext(queryExecutionContext)
+                    .resultConfiguration(resultConfiguration).build();
 
-        StartQueryExecutionResponse startQueryExecutionResponse = this.athenaClient.startQueryExecution(startQueryExecutionRequest);
+            StartQueryExecutionResponse startQueryExecutionResponse = this.athenaClient.startQueryExecution(startQueryExecutionRequest);
 
-        return startQueryExecutionResponse.queryExecutionId();
+            return startQueryExecutionResponse.queryExecutionId();
+        } catch (AthenaException e) {
+            e.printStackTrace();
+            System.exit(1);
+            return e.getMessage();
+        }
+        
     }
 
     // Wait for an Amazon Athena query to complete, fail or to be cancelled
