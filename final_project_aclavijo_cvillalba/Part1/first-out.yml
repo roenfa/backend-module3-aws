@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Lambda application example.
+Resources:
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://backend-aclavijo-cvillalba/a7143d1e1971efc226982c628dfe6ffc
+      Handler: org.example.handlers.HandlerRequest
+      FunctionName: cvillalba-aclavijo-final-project1
+      Runtime: java11
+      Description: Java function
+      MemorySize: 1024
+      Timeout: 15
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - AWSLambda_ReadOnlyAccess
+      - AWSXrayWriteOnlyAccess
+      - AWSLambdaVPCAccessExecutionRole
+      - AmazonAthenaFullAccess
+      - AmazonS3ReadOnlyAccess
+      Tracing: Active
