@@ -1,7 +1,7 @@
 package org.example.services;
 
 import lombok.SneakyThrows;
-import org.example.models.Transaction;
+import org.example.models.Products;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,15 +19,15 @@ public class AthenaOrchestrator {
     }
 
     @SneakyThrows
-    public List<Transaction> execute() {
-        List<Transaction> transactionList = new ArrayList<>();
+    public List<Products> execute() {
+        List<Products> transactionList = new ArrayList<>();
         String queryExecutionId =
                 this.athenaService.submitQuery(this.query);
 
         this.athenaService.waitForQueryToComplete(queryExecutionId);
         transactionList = this.athenaService.processQueryResult(queryExecutionId);
-        for (Transaction t: transactionList) {
-            logger.info("Transaction = " + t);
+        for (Products t: transactionList) {
+            logger.info("Products = " + t);
         }
 
         return transactionList;

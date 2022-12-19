@@ -1,7 +1,7 @@
 package org.example.services;
 
 import org.example.constants.Constants;
-import org.example.models.Transaction;
+import org.example.models.Products;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.athena.model.*;
@@ -68,8 +68,8 @@ public class AthenaService implements IAthenaService {
         }
     }
 
-    public List<Transaction> processQueryResult(String queryExecutionId) {
-        List<Transaction> transactionList = new ArrayList<>();
+    public List<Products> processQueryResult(String queryExecutionId) {
+        List<Products> transactionList = new ArrayList<>();
         List<Row> rows;
 
         try {
@@ -83,12 +83,11 @@ public class AthenaService implements IAthenaService {
 
                 for (Row myRow : rows.subList(1, rows.size())) { // skip first row – column names
                     List<Datum> allData = myRow.data();
-                    Transaction transaction = new Transaction();
-                    transaction.setId(allData.get(0).varCharValue());
-                    transaction.setType(allData.get(1).varCharValue());
-                    transaction.setAmount(Double.parseDouble(allData.get(2).varCharValue()));
-                    transaction.setDate(allData.get(3).varCharValue());
-                    transactionList.add(transaction);
+                    Products product = new Products();
+                    product.setId(allData.get(0).varCharValue());
+                    product.setname(allData.get(1).varCharValue());
+                    product.setstock(Integer.parseInt(allData.get(2).varCharValue()));
+                    transactionList.add(product);
                 }
             }
         } catch (AthenaException e) {
