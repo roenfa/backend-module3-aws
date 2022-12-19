@@ -9,6 +9,8 @@ import org.example.repositories.TransactionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import software.amazon.awssdk.services.lambda.LambdaClient;
+
 @Configuration
 public class RepositoriesConfigurator {
     @Bean
@@ -21,14 +23,15 @@ public class RepositoriesConfigurator {
     }
     @Bean
     public ITransactionRepository initTransactionRepository(){
-        var transactions = new TransactionRepository();
+        /* var transactions = new TransactionRepository();
         Transaction t1 = new Transaction("2163962193", "REFUND", 21.3,"2022-12-16");
         Transaction t2 = new Transaction("2163962194", "SALES", 25.6,"2022-12-17");
         Transaction t3 = new Transaction("2163962195", "EXPECTED", 27.8,"2022-12-18");
         transactions.save(t1);
         transactions.save(t2);
-        transactions.save(t3);
-
-        return transactions;
+        transactions.save(t3); */
+        LambdaClient lambdaClient = DependencyFactory.lambdaClient();
+        TransactionRepository transactionRepository = new TransactionRepository(lambdaClient);
+        return transactionRepository;
     }
 }
