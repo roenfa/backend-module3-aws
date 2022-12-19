@@ -26,10 +26,6 @@ public class AthenaOrchestrator {
 
         this.athenaService.waitForQueryToComplete(queryExecutionId);
         transactionList = this.athenaService.processQueryResult(queryExecutionId);
-        for (Transaction t: transactionList) {
-            logger.info("Transaction = " + t);
-        }
-
         return transactionList;
     }
 }

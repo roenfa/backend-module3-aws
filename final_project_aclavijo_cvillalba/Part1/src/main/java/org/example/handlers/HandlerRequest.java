@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 
 import org.example.configurations.AthenaClientFactory;
@@ -24,7 +23,6 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 
 import software.amazon.awssdk.services.athena.AthenaClient;
 
@@ -37,13 +35,17 @@ public class HandlerRequest implements RequestStreamHandler {
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         LambdaLogger logger = context.getLogger();
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("US-ASCII")));
+        PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("US-ASCII"))));
+
         String line;
         while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
         String inputString = sb.toString();
+        sb.delete(0, sb.length());
+
+        logger.log(inputString);
         inputString=inputString.replace('"', ' ');
         inputString=inputString.replace(" ", "");
         inputString=inputString.replace("{", "");
@@ -52,19 +54,24 @@ public class HandlerRequest implements RequestStreamHandler {
 
         String Query = "SELECT * FROM transactionsupdate where " + column[0]+" = "+"'"+column[1].toUpperCase()+"'"+ ";";
 
+        // logger.log(Query);
+
         AthenaClientFactory factory = new AthenaClientFactory();
         AthenaClient athenaClient = factory.createClientDev();
         AthenaService athenaQueryExecutor = new AthenaService(athenaClient);
         logger.log("Initializing Athena Orchestrator");
 
         if(inputString.length()>5){
-            AthenaOrchestrator orchestrator = new AthenaOrchestrator(Query, athenaQueryExecutor);
-            logger.log("Executing Athena Orchestrator");
-            orchestrator.execute();
-        }else{
-            AthenaOrchestrator orchestrator = new AthenaOrchestrator(defaultQuery, athenaQueryExecutor);
-            logger.log("Executing Athena Orchestrator");
-            orchestrator.execute();
+            defaultQuery =Query;
         }
+        AthenaOrchestrator orchestrator = new AthenaOrchestrator(defaultQuery, athenaQueryExecutor);
+        logger.log("Executing Athena Orchestrator");
+        List<Transaction> responseList = orchestrator.execute();
+        // logger.log("responseList : "+ responseList);
+        String result = gson.toJson(responseList);
+        // logger.log("result : "+ result);
+        writer.write(gson.toJson(result));         
+        reader.close();
+        writer.close();
     }
 }
