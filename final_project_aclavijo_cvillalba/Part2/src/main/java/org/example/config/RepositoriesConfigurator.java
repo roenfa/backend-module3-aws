@@ -1,7 +1,6 @@
 package org.example.config;
 
 
-import org.example.models.Transaction;
 import org.example.repositories.ITransactionRepository;
 import org.example.repositories.TransactionRepository;
 import org.springframework.context.annotation.Bean;
