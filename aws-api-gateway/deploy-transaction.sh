@@ -4,7 +4,7 @@ ARTIFACT_BUCKET='djag-api-gateway'
 TEMPLATE=stack-transaction.yml
 STACK_NAME='djag-api-gateway-lambda'
 FUNCTION_NAME='djag-api-gateway-lambda'
-AWS_PROFILE=$1
+AWS_PROFILE="default"
 
 # Spring Boot 2 stack
 aws s3 cp build/distributions/aws-api-gateway-1.0-SNAPSHOT.zip s3://$ARTIFACT_BUCKET/aws-api-gateway-1.0-SNAPSHOT.zip --profile $AWS_PROFILE

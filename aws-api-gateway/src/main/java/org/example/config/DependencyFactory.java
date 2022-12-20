@@ -11,7 +11,6 @@ public class DependencyFactory {
     AwsCredentialsProvider credProvider = DefaultCredentialsProvider.create();
 
     return LambdaClient.builder()
-            .credentialsProvider(credProvider)        
             .region(Region.US_EAST_1)
             .httpClientBuilder(UrlConnectionHttpClient.builder())
             .build();
