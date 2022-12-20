@@ -10,7 +10,7 @@ Resources:
       Handler: org.example.handlers.LambdaHandler
       FunctionName: djag-athena-lambda
       Runtime: java11
-      Description: Java function
+      Description: Java function - Lambda Spring Boot - Athena
       MemorySize: 512
       Timeout: 60
       Policies:
