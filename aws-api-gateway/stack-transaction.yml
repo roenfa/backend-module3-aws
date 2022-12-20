@@ -25,6 +25,7 @@ Resources:
           - REGIONAL
       Name: !Ref apiGatewayName
 
+  # Resources
   transactionsResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -38,6 +39,8 @@ Resources:
       RestApiId: !Ref apiGateway
       ParentId: !Ref transactionsResource
       PathPart: '{id}'
+
+  # Metodos
 
   transactionsGetMethod:
     Type: AWS::ApiGateway::Method
@@ -80,24 +83,6 @@ Resources:
           - lambdaArn: !GetAtt lambdaFunction.Arn
       ResourceId: !Ref transactionsIdResource
       RestApiId: !Ref apiGateway
-
-  # transactionsIdGetMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     AuthorizationType: NONE
-  #     HttpMethod: GET
-  #     Integration:
-  #       IntegrationHttpMethod: POST
-  #       Type: AWS_PROXY
-  #       Uri: !Sub
-  #         - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-  #         - lambdaArn: !GetAtt lambdaFunction.Arn
-  #     ResourceId: !Ref transactionsResource
-  #     RestApiId: !Ref apiGateway
-  #     RequestParameters:
-  #       Path:
-  #         '{id}': true
-  #     RequestValidatorId: default
 
   apiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
@@ -159,6 +144,12 @@ Resources:
                 Resource:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${functionName}:*
           PolicyName: lambda
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
 
   lambdaLogGroup:
     Type: AWS::Logs::LogGroup

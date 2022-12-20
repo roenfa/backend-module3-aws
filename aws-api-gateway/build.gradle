@@ -15,6 +15,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
     implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot2:1.5.2'
+    implementation 'software.amazon.awssdk:lambda:2.18.28' // For lambda
+    implementation 'software.amazon.awssdk:url-connection-client:2.18.31'
+    implementation 'com.google.code.gson:gson:2.10'
 
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
